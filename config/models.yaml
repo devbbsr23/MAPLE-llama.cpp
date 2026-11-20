@@ -1,0 +1,18 @@
+{
+  "_comment": "Mirror of MODEL_ROSTER in src/maple/config.py (authoritative). JSON-compatible YAML. Paths are external references; model files are never packaged, copied or modified. tests/test_registry.py asserts this file matches MODEL_ROSTER.",
+  "aliases": {"quant": "qwen3"},
+  "models": {
+    "deepseek": {"id": "deepseek", "name": "DeepSeek-Coder-V2-Lite MAPLE", "role": "Systems Engineering and Algorithm Specialist",
+      "specialties": ["C++20", "Rust", "Concurrency", "Lock-Free Structures", "Algorithms"], "backend": "llama",
+      "model_path": "/kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf", "temperature": 0.3, "max_tokens": 4096},
+    "gemma": {"id": "gemma", "name": "Gemma 4 26B MAPLE", "role": "General Software and Code Review Specialist",
+      "specialties": ["Python", "Web Development", "Frontend", "Refactoring", "Documentation"], "backend": "llama",
+      "model_path": "/kaggle/working/models/gemma/gemma-4-26B-A4B-MAPLE-IQ2_XXS.gguf", "temperature": 0.5, "max_tokens": 4096},
+    "qwen3": {"id": "qwen3", "name": "Qwen3 8B Q4_K_M", "role": "Strategic Reasoning and Architecture Specialist",
+      "specialties": ["Architectural Decisions", "Strategic Planning", "Complex Reasoning", "System Design", "Trading Analysis", "Decision Making"], "backend": "llama",
+      "model_path": "/kaggle/working/models/quant/Qwen3-8B-Q4_K_M.gguf", "temperature": 0.6, "max_tokens": 4096},
+    "fast": {"id": "fast", "name": "Qwen2.5 Coder 1.5B Q4_K_M", "role": "Ultra-Fast Triage and Terminal Copilot",
+      "specialties": ["Git Commits", "Regex", "Shell", "Quick Syntax Checks", "Fast Edits"], "backend": "llama",
+      "model_path": "/kaggle/working/models/fast/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf", "temperature": 0.2, "max_tokens": 2048}
+  }
+}

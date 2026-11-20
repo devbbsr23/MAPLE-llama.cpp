@@ -1,0 +1,111 @@
+{
+  "environment": {
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "mem_total_mib": 15360,
+        "mem_used_mib": 3,
+        "mem_free_mib": 14909,
+        "util_pct": 0,
+        "compute_cap": "7.5",
+        "driver": "580.178.04"
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "mem_total_mib": 15360,
+        "mem_used_mib": 3,
+        "mem_free_mib": 14909,
+        "util_pct": 0,
+        "compute_cap": "7.5",
+        "driver": "580.178.04"
+      }
+    ],
+    "ram": {
+      "total": 33658159104,
+      "available": 31676571648
+    },
+    "two_t4_detected": true,
+    "gpu_count": 2,
+    "time_utc": "2026-11-20T05:33:31Z"
+  },
+  "results": {
+    "deepseek": [
+      {
+        "requested_ctx": 131072,
+        "ok": false,
+        "load_time_s": 21.94,
+        "placement": {
+          "devices": [
+            0,
+            1
+          ],
+          "split_mode": "layer",
+          "estimate_mib": 39866,
+          "reason": "estimate 39866 MiB exceeds free GPU memory (29818 MiB); partial CPU offload likely"
+        },
+        "gpu_mem_used_mib_before": [
+          3,
+          3
+        ],
+        "gpu_mem_used_mib_after_load": [
+          12261,
+          11627
+        ],
+        "cpu_rss_mib": 29115,
+        "cmd": "/kaggle/working/MAPLE-llama.cpp/vendor/llamacpp/llama.cpp/build/bin/llama-server -m /kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf --host 127.0.0.1 --port 8081 -c 131072 -np 1 -fa auto --alias deepseek --metrics -ngl 99 -dev CUDA0,CUDA1 -sm layer -lv 4 -ctk q8_0 -ctv q8_0",
+        "kv_cache_mib": 18360.0,
+        "kv_buffers": [
+          {
+            "device": "CUDA0",
+            "mib": 9520.0
+          },
+          {
+            "device": "CUDA1",
+            "mib": 8840.0
+          }
+        ],
+        "layers_offloaded": "28/28",
+        "model_buffers": [
+          {
+            "device": "CPU_Mapped",
+            "mib": 65.62
+          },
+          {
+            "device": "CUDA0",
+            "mib": 2213.16
+          },
+          {
+            "device": "CUDA1",
+            "mib": 2323.83
+          }
+        ],
+        "compute_buffers": [
+          {
+            "device": "CUDA0",
+            "mib": 348.18
+          },
+          {
+            "device": "CUDA1",
+            "mib": 284.26
+          },
+          {
+            "device": "CUDA_Host",
+            "mib": 74640.07
+          }
+        ],
+        "n_ctx_reported": 131072,
+        "short": {
+          "wall_s": 3.44,
+          "prompt_n": 23,
+          "prompt_tps": 42.794280451386626,
+          "gen_n": 64,
+          "gen_tps": 21.86007746101099,
+          "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+        },
+        "error": "TimeoutError: timed out"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+MAPLE-llama.cpp
+Copyright (c) 2026 Prrahdip Dey.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Attribution
+-----------
+This project builds an inference orchestration layer around models and ideas from
+the upstream MAPLE project:
+
+  MAPLE: Manifold-Activated Pruning of Latent Experts for Sub-2-BPW MoE LLMs
+  Author: Aman Sachan
+  Repository: https://github.com/AmSach/maple   (Apache License 2.0)
+  Upstream commit referenced when this project was created:
+      5403b6f5ec3f904409d968ff6a3ea3a2b22767d1  (2026-11-19)
+  DOI: 10.5281/zenodo.24344372
+
+The upstream repository's source files are NOT copied into this project. Only
+the upstream LICENSE text is reproduced (unchanged) as required for Apache-2.0
+attribution. The MAPLE model files (GGUF) are produced and published by the
+upstream author and are used here as external, read-only inputs; they are not
+distributed with this project.
+
+MAPLE-llama.cpp is an independent project. It is not an official fork, release or continuation of the upstream
+repository and is not endorsed by its authors. A source comparison on 2026-11-20 found no upstream source code in this
+repository; only the Apache-2.0 license text is shared.
+
+Changes relative to upstream: this is a new codebase. The upstream Ollama-based
+router and its Bonsai integration were intentionally NOT carried over; there is
+no Bonsai dependency or runtime component anywhere in this project.
+
+Third-party components
+----------------------
+llama.cpp (MIT License) - https://github.com/ggml-org/llama.cpp
+  A previously compiled CUDA distribution (commit ef3848f, built with GNU 13.3.0,
+  CUDA 13.0, sm_75) is reused unmodified. Its license applies to the packaged
+  binaries; see MAPLE-llamacpp-cuda.tar.gz (llama.cpp/LICENSE).
+NVIDIA CUDA runtime, cuBLAS and NCCL are required at run time and are NOT
+bundled or redistributed by this project.

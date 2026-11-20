@@ -1,0 +1,157 @@
+{
+  "generated_utc": "2026-11-20T06:38:54Z",
+  "os": {
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "glibc": [
+      "ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39"
+    ]
+  },
+  "gpus": [
+    {
+      "index": 0,
+      "name": "Tesla T4",
+      "mem_total_mib": 15360,
+      "mem_used_mib": 0,
+      "mem_free_mib": 14912,
+      "util_pct": 0,
+      "compute_cap": "7.5",
+      "driver": "580.178.04"
+    },
+    {
+      "index": 1,
+      "name": "Tesla T4",
+      "mem_total_mib": 15360,
+      "mem_used_mib": 0,
+      "mem_free_mib": 14912,
+      "util_pct": 0,
+      "compute_cap": "7.5",
+      "driver": "580.178.04"
+    }
+  ],
+  "cuda": {
+    "toolkit": "ase 13.0, V13.0.88 Build cuda_13.0.r13.0/compiler.36424714_0",
+    "driver": "580.178.04"
+  },
+  "compilers": {
+    "gcc": [
+      "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+    ],
+    "cmake": [
+      "cmake version 3.31.10"
+    ]
+  },
+  "python": "3.13.16",
+  "llama_cpp": {
+    "version_string": "version: 1.0.0-dev (build 1, commit ef3848f)\nbuilt with GNU 13.3.0 for Linux x86_64",
+    "commit": "ef3848f",
+    "recompiled_by_maple": false,
+    "source_archive_sha256": "541483fc880595fe20b02f04a0280eb0024d57c9bd4ac2082e7b04fd619eb5f0",
+    "build_flags": {
+      "BUILD_SHARED_LIBS": "ON",
+      "CMAKE_BUILD_TYPE": "Release",
+      "CMAKE_CUDA_ARCHITECTURES": "75",
+      "CMAKE_CUDA_COMPILER": "/usr/local/cuda/bin/nvcc",
+      "CMAKE_CUDA_FLAGS": "",
+      "CMAKE_CXX_COMPILER": "/usr/bin/c++",
+      "GGML_CUDA": "ON",
+      "GGML_CUDA_CCCL_VERSION": "",
+      "GGML_CUDA_COMPRESSION_MODE": "size",
+      "GGML_CUDA_F16": "ON",
+      "GGML_CUDA_FA": "ON",
+      "GGML_CUDA_FA_ALL_QUANTS": "OFF",
+      "GGML_CUDA_FA_QUANTS": "q4_0-q4_0;q8_0-q8_0;f16-f16;bf16-bf16;f8_e4m3-f8_e4m3",
+      "GGML_CUDA_FORCE_CUBLAS": "OFF",
+      "GGML_CUDA_FORCE_MMQ": "OFF",
+      "GGML_CUDA_GRAPHS": "ON",
+      "GGML_CUDA_NCCL": "ON",
+      "GGML_CUDA_NO_PEER_COPY": "OFF",
+      "GGML_CUDA_NO_VMM": "ON",
+      "GGML_NATIVE": "ON",
+      "GGML_OPENMP": "ON"
+    },
+    "cuda_architectures": "75 (sm_75, Tesla T4/Turing) - see CMAKE_CUDA_ARCHITECTURES"
+  },
+  "maple": {
+    "project_git_commit": null,
+    "upstream": {
+      "repo": "https://github.com/AmSach/maple",
+      "commit": "5403b6f5ec3f904409d968ff6a3ea3a2b22767d1",
+      "license": "Apache-2.0"
+    }
+  },
+  "models": {
+    "deepseek": {
+      "name": "DeepSeek-Coder-V2-Lite MAPLE",
+      "size_bytes": 4830185248,
+      "sha256": "a8a562383bae869564da64b973c98fee5dfeac48d427f1ad31dd1799be9c7480",
+      "architecture": "deepseek2",
+      "is_moe": true,
+      "tested_max_ctx": 65536,
+      "tested_kv_type": "f16",
+      "incomplete_runs": [
+        {
+          "requested_ctx": 131072,
+          "kv_type": "q8_0",
+          "fill_frac_requested": 0.25,
+          "status": "incomplete",
+          "ok": null,
+          "reason": "run interrupted when the SSH tunnel dropped; no result recorded; NOT a success, NOT a failure verdict",
+          "recorded_utc": "2026-11-20T06:13:22Z"
+        }
+      ],
+      "validation_status": "ok"
+    },
+    "gemma": {
+      "name": "Gemma 4 26B MAPLE",
+      "size_bytes": 4745987168,
+      "sha256": "bac3628d8a074e16015c809f963b9e6696d7329039458be386bf869c4cbdeec3",
+      "architecture": "gemma4",
+      "is_moe": true,
+      "tested_max_ctx": 131072,
+      "tested_kv_type": "f16",
+      "incomplete_runs": [],
+      "validation_status": "ok"
+    },
+    "qwen3": {
+      "name": "Qwen3 8B Q4_K_M",
+      "size_bytes": 5027783488,
+      "sha256": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785",
+      "architecture": "qwen3",
+      "is_moe": false,
+      "tested_max_ctx": 32768,
+      "tested_kv_type": "f16",
+      "incomplete_runs": [],
+      "validation_status": "ok"
+    },
+    "fast": {
+      "name": "Qwen2.5 Coder 1.5B Q4_K_M",
+      "size_bytes": 1117320768,
+      "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "architecture": "qwen2",
+      "is_moe": false,
+      "tested_max_ctx": 32768,
+      "tested_kv_type": "f16",
+      "incomplete_runs": [],
+      "validation_status": "ok"
+    }
+  },
+  "benchmarks": {
+    "deepseek": [
+      {
+        "ctx": 131072,
+        "ok": false,
+        "load_s": 21.94,
+        "gen_tps": 21.86007746101099,
+        "prompt_tps": 42.794280451386626,
+        "kv_mib": 18360.0,
+        "layers": "28/28",
+        "devices": [
+          0,
+          1
+        ],
+        "split": "layer"
+      }
+    ]
+  },
+  "gpu_placement_note": "T4s are two independent 15 GiB devices; MAPLE layer-splits only when a model+KV estimate exceeds ~85% of one GPU's free memory."
+}

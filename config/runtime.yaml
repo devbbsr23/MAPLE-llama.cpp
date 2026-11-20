@@ -1,0 +1,19 @@
+{
+  "_comment": "JSON-compatible YAML. 'ctx' values are conservative defaults until validated by scripts/benchmark.py; do not raise them without a passing test (see manifests/models_manifest.json 'tested').",
+  "host": "127.0.0.1",
+  "api_port": 8000,
+  "llama_port": 8081,
+  "default_ctx": 4096,
+  "startup_timeout_s": 300,
+  "gpu_layers": 99,
+  "parallel_slots": 1,
+  "flash_attn": "auto",
+  "default_model": "gemma",
+  "driver_lib_dirs": ["/usr/local/nvidia/lib64"],
+  "models": {
+    "deepseek": {"ctx": 4096},
+    "gemma": {"ctx": 4096},
+    "qwen3": {"ctx": 4096},
+    "fast": {"ctx": 4096}
+  }
+}

@@ -1,0 +1,50 @@
+# Models and model-like files: never in Git
+*.gguf
+*.gguf.*
+*.ggml
+*.safetensors
+*.pt
+*.bin
+models/
+
+# Generated artifacts and compiled binaries: distributed as release assets, not committed
+artifacts/*.tar.gz
+artifacts/*.tar.zst
+artifacts/*.zip
+artifacts/.package_results.json
+*.so
+*.so.*
+*.dll
+*.exe
+*.o
+*.a
+vendor/
+build/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Secrets, local environment, logs, databases, caches
+.env
+maple.env
+maple_api.pid
+*.pem
+id_rsa*
+id_ed25519*
+*.log
+logs/
+*.db
+*.sqlite
+.cache/
+.sync_staging/
+
+# Machine-specific state of a local recovery copy (not part of the source repository)
+LOCAL_BACKUP_MANIFEST.json
+SYNC_STATUS.md
+manifests/restore_report.json

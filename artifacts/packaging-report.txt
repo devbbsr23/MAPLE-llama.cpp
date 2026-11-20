@@ -1,0 +1,58 @@
+MAPLE packaging report
+generated: 2026-11-20 08:02:58 UTC
+
+== llamacpp
+  artifact: /kaggle/working/artifacts/MAPLE-llamacpp-cuda.tar.gz
+  sha256: 0be6e25deedb37c2ab01fd53c761a7efcacddd3ff37d6713e4787bd9062a1b49
+  size: 60260524
+  included_files: 66
+  symlinks: 14
+  source archive: /kaggle/working/downloaded-llama-cpp-full-cuda-t4.tar.gz
+  source archive sha256: 541483fc880595fe20b02f04a0280eb0024d57c9bd4ac2082e7b04fd619eb5f0 (unmodified, verified after packaging)
+  recompiled: no; binaries modified: no
+  excluded *.gguf files: 19 (77556152 bytes) - vocabulary test files, NOT model weights:
+    - llama.cpp/models/ggml-vocab-gemma-4.gguf (15776467 bytes)
+    - llama.cpp/models/ggml-vocab-command-r.gguf (10874545 bytes)
+    - llama.cpp/models/ggml-vocab-gpt-neox.gguf (1771431 bytes)
+    - llama.cpp/models/ggml-vocab-nomic-bert-moe.gguf (6821877 bytes)
+    - llama.cpp/models/ggml-vocab-bert-bge.gguf (627549 bytes)
+    - llama.cpp/models/ggml-vocab-baichuan.gguf (1340998 bytes)
+    - llama.cpp/models/ggml-vocab-deepseek-llm.gguf (3970167 bytes)
+    - llama.cpp/models/ggml-vocab-falcon.gguf (2287728 bytes)
+    - llama.cpp/models/ggml-vocab-starcoder.gguf (1719346 bytes)
+    - llama.cpp/models/ggml-vocab-llama-spm.gguf (723869 bytes)
+    - llama.cpp/models/ggml-vocab-gpt-2.gguf (1766807 bytes)
+    - llama.cpp/models/ggml-vocab-llama-bpe.gguf (7818140 bytes)
+    - llama.cpp/models/ggml-vocab-aquila.gguf (4825676 bytes)
+    - llama.cpp/models/ggml-vocab-deepseek-coder.gguf (1156067 bytes)
+    - llama.cpp/models/ggml-vocab-qwen2.gguf (5928681 bytes)
+    - llama.cpp/models/ggml-vocab-qwen35.gguf (5928682 bytes)
+    - llama.cpp/models/ggml-vocab-mpt.gguf (1771393 bytes)
+    - llama.cpp/models/ggml-vocab-refact.gguf (1720710 bytes)
+    - llama.cpp/models/ggml-vocab-phi-3.gguf (726019 bytes)
+  excluded test binaries: llama.cpp/build/bin/test-*
+
+== runtime
+  artifact: /kaggle/working/artifacts/MAPLE-runtime.tar.gz
+  sha256: 440721c5791ce023e8348931e613df978969e19268d9037111f9984ae6a65b8f
+  size: 108353
+  members: 72
+
+== deps
+  artifact: /kaggle/working/artifacts/MAPLE-python-deps.tar.gz
+  sha256: 1c1d0a3f99c95d3a27b0e5b7aef9d0fa9531bf679351803ee14e4d87f70e3b1b
+  size: 796586
+  wheels: ['pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl']
+  notes: ['pip download rc=0']
+
+== complete
+  artifact: /kaggle/working/artifacts/MAPLE-complete.tar.gz
+  sha256: 156da0c79a69c87e35cde1e202cedc87445876db5028e90efb0c04f285b4bb3e
+  size: 60742719
+  components: ['MAPLE-llamacpp-cuda.tar.gz', 'MAPLE-runtime.tar.gz', 'MAPLE-python-deps.tar.gz']
+
+model files: not packaged, not copied, not modified; stat (size, mtime) recorded before and after:
+  deepseek  /kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf 4830185248
+  gemma     /kaggle/working/models/gemma/gemma-4-26B-A4B-MAPLE-IQ2_XXS.gguf 4745987168
+  qwen3     /kaggle/working/models/quant/Qwen3-8B-Q4_K_M.gguf 5027783488
+  fast      /kaggle/working/models/fast/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf 1117320768

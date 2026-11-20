@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "test": "clean-environment restoration from local archives (separate temporary directory on Kaggle; working install untouched)",
+  "completed_utc": "2026-11-20T07:18:11Z",
+  "restore_dir": "/tmp/maple_clean2/MAPLE-llama.cpp",
+  "incoming_dir": "/tmp/maple_clean2_incoming",
+  "archives_source": "<local recovery folder>/artifacts (uploaded by scripts/push_to_kaggle.py)",
+  "no_recompilation": true,
+  "models_copied_or_modified": false,
+  "restore_steps": [
+    {
+      "step": "detect environment",
+      "ok": true,
+      "detail": "kaggle=True python=3.13.16 fresh=True"
+    },
+    {
+      "step": "checksum MAPLE-llamacpp-cuda.tar.gz",
+      "ok": true,
+      "detail": "0be6e25deedb37c2..."
+    },
+    {
+      "step": "integrity+safety MAPLE-llamacpp-cuda.tar.gz",
+      "ok": true,
+      "detail": "no GGUF, no unsafe paths"
+    },
+    {
+      "step": "checksum MAPLE-runtime.tar.gz",
+      "ok": true,
+      "detail": "c50e4afad2062ed6..."
+    },
+    {
+      "step": "integrity+safety MAPLE-runtime.tar.gz",
+      "ok": true,
+      "detail": "no GGUF, no unsafe paths"
+    },
+    {
+      "step": "checksum MAPLE-python-deps.tar.gz",
+      "ok": true,
+      "detail": "1c1d0a3f99c95d3a..."
+    },
+    {
+      "step": "integrity+safety MAPLE-python-deps.tar.gz",
+      "ok": true,
+      "detail": "no GGUF, no unsafe paths"
+    },
+    {
+      "step": "restore MAPLE application",
+      "ok": true,
+      "detail": "58 files written; 0 differing files kept (use --overwrite-source): []"
+    },
+    {
+      "step": "restore llama.cpp",
+      "ok": true,
+      "detail": "83 files written, 0 permission modes re-applied from the archive; no compilation"
+    },
+    {
+      "step": "python dependencies",
+      "ok": true,
+      "detail": "offline wheels installed into /tmp/maple_clean2/MAPLE-llama.cpp/vendor/pydeps; import check: 6.0.3 /tmp/maple_clean2/MAPLE-llama.cpp/vendor/pydeps/yaml/__init__.py"
+    },
+    {
+      "step": "write maple.env",
+      "ok": true,
+      "detail": "LD_LIBRARY_PATH set per-process only; system environment untouched"
+    },
+    {
+      "step": "CUDA/dependency compatibility",
+      "ok": true,
+      "detail": "2 GPU(s): ['Tesla T4', 'Tesla T4']; glibc (2, 39)"
+    },
+    {
+      "step": "model deepseek",
+      "ok": true,
+      "detail": "/kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf size=4830185248 sha256=match"
+    },
+    {
+      "step": "model gemma",
+      "ok": true,
+      "detail": "/kaggle/working/models/gemma/gemma-4-26B-A4B-MAPLE-IQ2_XXS.gguf size=4745987168 sha256=match"
+    },
+    {
+      "step": "model qwen3",
+      "ok": true,
+      "detail": "/kaggle/working/models/quant/Qwen3-8B-Q4_K_M.gguf size=5027783488 sha256=match"
+    },
+    {
+      "step": "model fast",
+      "ok": true,
+      "detail": "/kaggle/working/models/fast/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf size=1117320768 sha256=match"
+    },
+    {
+      "step": "llama.cpp smoke test (fast)",
+      "ok": true,
+      "detail": "loaded in 1.53s; reply='OK'"
+    },
+    {
+      "step": "MAPLE API health",
+      "ok": true,
+      "detail": "{\"deepseek\": \"ok\", \"gemma\": \"ok\", \"qwen3\": \"ok\", \"fast\": \"ok\"}"
+    }
+  ],
+  "restore_ok": true,
+  "probe": {
+    "passed": 29,
+    "failed": 0,
+    "checks": [
+      {
+        "check": "restore dir is separate from the working installation",
+        "ok": true,
+        "detail": "/tmp/maple_clean2/MAPLE-llama.cpp vs /kaggle/working/MAPLE-llama.cpp"
+      },
+      {
+        "check": "llama.cpp executables present and executable",
+        "ok": true,
+        "detail": "bin=/tmp/maple_clean2/MAPLE-llama.cpp/vendor/llamacpp/llama.cpp/build/bin not-executable=[]"
+      },
+      {
+        "check": "shared libraries resolve (CUDA 13, cuBLAS, NCCL, ggml)",
+        "ok": true,
+        "detail": "all resolved"
+      },
+      {
+        "check": "ldd does not use the protected tree or the working install",
+        "ok": true,
+        "detail": "libs come from the restored copy / host"
+      },
+      {
+        "check": "CUDA sees two Tesla T4 GPUs",
+        "ok": true,
+        "detail": "T4 lines: 2"
+      },
+      {
+        "check": "unchanged: downloaded-llama-cpp-full-cuda-t4.tar.gz",
+        "ok": true,
+        "detail": "541483fc880595fe"
+      },
+      {
+        "check": "unchanged: MAPLE-llamacpp-cuda.tar.gz",
+        "ok": true,
+        "detail": "0be6e25deedb37c2"
+      },
+      {
+        "check": "API /health: four models ok at exact paths",
+        "ok": true,
+        "detail": "{'deepseek': 'ok', 'gemma': 'ok', 'qwen3': 'ok', 'fast': 'ok'}"
+      },
+      {
+        "check": "API /v1/models lists the roster + auto, alias quant",
+        "ok": true,
+        "detail": "['deepseek', 'gemma', 'qwen3', 'fast', 'auto'] aliases={'quant': 'qwen3'}"
+      },
+      {
+        "check": "inference model=fast",
+        "ok": true,
+        "detail": "served_by=fast 1.7s reply='OK'"
+      },
+      {
+        "check": "  exactly one llama-server resident after fast",
+        "ok": true,
+        "detail": "pids [14947]"
+      },
+      {
+        "check": "inference model=deepseek",
+        "ok": true,
+        "detail": "served_by=deepseek 18.2s reply='OK\\n\\n### Explanation:\\nThe task '"
+      },
+      {
+        "check": "  exactly one llama-server resident after deepseek",
+        "ok": true,
+        "detail": "pids [14968]"
+      },
+      {
+        "check": "inference model=gemma",
+        "ok": true,
+        "detail": "served_by=gemma 5.2s reply='OK'"
+      },
+      {
+        "check": "  exactly one llama-server resident after gemma",
+        "ok": true,
+        "detail": "pids [14989]"
+      },
+      {
+        "check": "inference model=qwen3",
+        "ok": true,
+        "detail": "served_by=qwen3 17.6s reply='OK'"
+      },
+      {
+        "check": "  exactly one llama-server resident after qwen3",
+        "ok": true,
+        "detail": "pids [15010]"
+      },
+      {
+        "check": "inference model=quant",
+        "ok": true,
+        "detail": "served_by=qwen3 14.4s reply='OK'"
+      },
+      {
+        "check": "  exactly one llama-server resident after quant",
+        "ok": true,
+        "detail": "pids [15010]"
+      },
+      {
+        "check": "inference model=fast",
+        "ok": true,
+        "detail": "served_by=fast 2.0s reply='OK'"
+      },
+      {
+        "check": "  exactly one llama-server resident after fast",
+        "ok": true,
+        "detail": "pids [15035]"
+      },
+      {
+        "check": "/v1/route auto-selects a specialist",
+        "ok": true,
+        "detail": "{'model': 'deepseek', 'reason': \"highest specialist score (8) among ['deepseek']\", 'scores': {'deepseek': 8, 'gemma': 0, 'qwen3': 0, 'fast': 0}, 'explicit': False}"
+      },
+      {
+        "check": "auto-routed inference",
+        "ok": true,
+        "detail": "served_by=fast"
+      },
+      {
+        "check": "model switching counted by the runtime",
+        "ok": true,
+        "detail": "{'loaded': 'fast', 'inflight': 0, 'switches': 5, 'healthy': True}"
+      },
+      {
+        "check": "running llama-server maps libraries only from the restored copy",
+        "ok": true,
+        "detail": "restored=45 protected=0 working=0"
+      },
+      {
+        "check": "GPU memory in use while a model is loaded",
+        "ok": true,
+        "detail": "['1245', '3']"
+      },
+      {
+        "check": "SIGTERM: no orphaned llama-server from the restored copy",
+        "ok": true,
+        "detail": "left=[] after 1s"
+      },
+      {
+        "check": "GPU memory released after shutdown",
+        "ok": true,
+        "detail": "MiB per GPU: ['0', '0']"
+      },
+      {
+        "check": "API process exited",
+        "ok": true,
+        "detail": "[]"
+      }
+    ]
+  },
+  "result": "PASS",
+  "history": [
+    {
+      "note": "first probe run: 28/29 - 'API process exited' failed because the probe's own pgrep shell matched itself (pid gone, API pid gone, port closed, 0 llama-server, GPUs 0 MiB verified directly). Probe fixed; API restarted in the same restored dir and the full probe re-run: 29/29."
+    }
+  ],
+  "limits": [
+    "Tested on the same Kaggle host as the working install (same session, same CUDA/driver); a brand-new session has not been exercised.",
+    "Models were already present at their roster paths; attaching them to a new session is a manual step (see RECOVERY_GUIDE.md)."
+  ]
+}

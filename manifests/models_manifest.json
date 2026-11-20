@@ -1,0 +1,1551 @@
+{
+  "generated_utc": "2026-11-20T05:19:45Z",
+  "note": "metadata only; no model binaries",
+  "models": {
+    "deepseek": {
+      "id": "deepseek",
+      "name": "DeepSeek-Coder-V2-Lite MAPLE",
+      "original_path": "/kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf",
+      "size_bytes": 4830185248,
+      "size_gib": 4.498,
+      "mtime_ns": 1795144159180428535,
+      "readable": true,
+      "sha256": "a8a562383bae869564da64b973c98fee5dfeac48d427f1ad31dd1799be9c7480",
+      "sha256_source": "computed in 17s",
+      "gguf": {
+        "gguf_version": 3,
+        "tensor_count": 377,
+        "architecture": "deepseek2",
+        "name": "DeepSeek-Coder-V2-Lite-Instruct-MAPLE-Sub5GB",
+        "file_type": 19,
+        "quantization_version": 2,
+        "context_length_trained": 163840,
+        "block_count": 27,
+        "embedding_length": 2048,
+        "feed_forward_length": 10944,
+        "head_count": 16,
+        "head_count_kv": 16,
+        "expert_count": 54,
+        "expert_used_count": 6,
+        "is_moe": true,
+        "rope_freq_base": 10000.0,
+        "tokenizer_model": "gpt2",
+        "vocab_size": 102400,
+        "has_chat_template": true
+      },
+      "llamacpp_knows_architecture": true,
+      "validation_status": "ok",
+      "tested": {
+        "max_validated_ctx": 65536,
+        "max_validated_kv_type": "f16",
+        "kv_bytes_per_token": 276480,
+        "runs": [
+          {
+            "requested_ctx": 4096,
+            "ok": true,
+            "load_time_s": 2.6,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 5946,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 5946 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              5953,
+              105
+            ],
+            "cpu_rss_mib": 570,
+            "kv_cache_mib": 1080.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 1080.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4536.99
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 204.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 24.02
+              }
+            ],
+            "n_ctx_reported": 4096,
+            "short": {
+              "wall_s": 1.11,
+              "prompt_n": 23,
+              "prompt_tps": 70.80648587410607,
+              "gen_n": 64,
+              "gen_tps": 80.22422032881744,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "long": {
+              "wall_s": 2.09,
+              "prompt_tokens": 2461,
+              "prompt_tps": 1484.4008232061128,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              6105,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              98,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 16384,
+            "ok": true,
+            "load_time_s": 2.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 7866,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 7866 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              9665,
+              105
+            ],
+            "cpu_rss_mib": 595,
+            "kv_cache_mib": 4320.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 4320.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4536.99
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 676.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 48.02
+              }
+            ],
+            "n_ctx_reported": 16384,
+            "short": {
+              "wall_s": 0.94,
+              "prompt_n": 23,
+              "prompt_tps": 165.64876699700392,
+              "gen_n": 64,
+              "gen_tps": 78.68056440191532,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "long": {
+              "wall_s": 12.41,
+              "prompt_tokens": 9841,
+              "prompt_tps": 877.1342657166889,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              11407,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              99,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 32768,
+            "ok": false,
+            "load_time_s": 2.57,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 10426,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 10426 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              14593,
+              105
+            ],
+            "cpu_rss_mib": 627,
+            "kv_cache_mib": 8640.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 8640.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4536.99
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 1284.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 80.02
+              }
+            ],
+            "n_ctx_reported": 32768,
+            "short": {
+              "wall_s": 1.0,
+              "prompt_n": 23,
+              "prompt_tps": 167.20584493475334,
+              "gen_n": 64,
+              "gen_tps": 73.48129900940211,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "error": "RemoteDisconnected: Remote end closed connection without response",
+            "kv_type": "f16"
+          },
+          {
+            "requested_ctx": 32768,
+            "ok": true,
+            "load_time_s": 3.04,
+            "placement": {
+              "devices": [
+                0,
+                1
+              ],
+              "split_mode": "layer",
+              "estimate_mib": 13946,
+              "reason": "does not fit one GPU; layer-split across 2 GPUs (independent devices, 29818 MiB free in total)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              8337,
+              8091
+            ],
+            "cpu_rss_mib": 859,
+            "kv_cache_mib": 8640.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 4480.0
+              },
+              {
+                "device": "CUDA1",
+                "mib": 4160.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 2213.16
+              },
+              {
+                "device": "CUDA1",
+                "mib": 2323.83
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 1520.28
+              },
+              {
+                "device": "CUDA1",
+                "mib": 1484.26
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 296.07
+              }
+            ],
+            "n_ctx_reported": 32768,
+            "short": {
+              "wall_s": 1.13,
+              "prompt_n": 23,
+              "prompt_tps": 120.08374535980745,
+              "gen_n": 64,
+              "gen_tps": 67.01101107915383,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "long": {
+              "wall_s": 23.99,
+              "prompt_tokens": 19671,
+              "prompt_tps": 891.2022422903938,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              12567,
+              12321
+            ],
+            "gpu_util_pct_sample": [
+              48,
+              40
+            ],
+            "kv_type": "f16"
+          },
+          {
+            "requested_ctx": 65536,
+            "ok": true,
+            "load_time_s": 3.01,
+            "placement": {
+              "devices": [
+                0,
+                1
+              ],
+              "split_mode": "layer",
+              "estimate_mib": 22586,
+              "reason": "does not fit one GPU; layer-split across 2 GPUs (independent devices, 29818 MiB free in total)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              14225,
+              13659
+            ],
+            "cpu_rss_mib": 1117,
+            "kv_cache_mib": 17280.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 8960.0
+              },
+              {
+                "device": "CUDA1",
+                "mib": 8320.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 2213.16
+              },
+              {
+                "device": "CUDA1",
+                "mib": 2323.83
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 2928.28
+              },
+              {
+                "device": "CUDA1",
+                "mib": 2892.26
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 552.07
+              }
+            ],
+            "n_ctx_reported": 65536,
+            "short": {
+              "wall_s": 0.82,
+              "prompt_n": 23,
+              "prompt_tps": 163.92975253734747,
+              "gen_n": 64,
+              "gen_tps": 92.67990567245155,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "long": {
+              "wall_s": 96.0,
+              "prompt_tokens": 39331,
+              "prompt_tps": 414.63802641112767,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              14869,
+              14883
+            ],
+            "gpu_util_pct_sample": [
+              3,
+              100
+            ],
+            "kv_type": "f16"
+          },
+          {
+            "requested_ctx": 131072,
+            "ok": false,
+            "load_time_s": 21.94,
+            "placement": {
+              "devices": [
+                0,
+                1
+              ],
+              "split_mode": "layer",
+              "estimate_mib": 39866,
+              "reason": "estimate 39866 MiB exceeds free GPU memory (29818 MiB); partial CPU offload likely"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              12261,
+              11627
+            ],
+            "cpu_rss_mib": 29115,
+            "kv_cache_mib": 18360.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 9520.0
+              },
+              {
+                "device": "CUDA1",
+                "mib": 8840.0
+              }
+            ],
+            "layers_offloaded": "28/28",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 65.62
+              },
+              {
+                "device": "CUDA0",
+                "mib": 2213.16
+              },
+              {
+                "device": "CUDA1",
+                "mib": 2323.83
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 348.18
+              },
+              {
+                "device": "CUDA1",
+                "mib": 284.26
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 74640.07
+              }
+            ],
+            "n_ctx_reported": 131072,
+            "short": {
+              "wall_s": 3.44,
+              "prompt_n": 23,
+              "prompt_tps": 42.794280451386626,
+              "gen_n": 64,
+              "gen_tps": 21.86007746101099,
+              "text_head": " Certainly! To reverse a singly linked list, we need to reverse the direction of the linked list by changing the directi"
+            },
+            "error": "TimeoutError: timed out",
+            "kv_type": "q8_0",
+            "status": "incomplete",
+            "status_note": "q8_0 KV, 131072 ctx: not validated. Timed out / interrupted (tunnel drop in same window). Do not claim 128K for deepseek."
+          }
+        ],
+        "env": {
+          "gpu_count": 2,
+          "gpus": [
+            "Tesla T4",
+            "Tesla T4"
+          ],
+          "two_t4": true,
+          "time_utc": "2026-11-20T05:33:31Z"
+        },
+        "incomplete_runs": [
+          {
+            "requested_ctx": 131072,
+            "kv_type": "q8_0",
+            "fill_frac_requested": 0.25,
+            "status": "incomplete",
+            "ok": null,
+            "reason": "run interrupted when the SSH tunnel dropped; no result recorded; NOT a success, NOT a failure verdict",
+            "recorded_utc": "2026-11-20T06:13:22Z"
+          }
+        ]
+      },
+      "last_reverified": {
+        "utc": "2026-11-20T06:12:46Z",
+        "sha256_matches_recorded": true,
+        "size_matches": true,
+        "note": "new container after SSH tunnel loss; models read-only"
+      }
+    },
+    "gemma": {
+      "id": "gemma",
+      "name": "Gemma 4 26B MAPLE",
+      "original_path": "/kaggle/working/models/gemma/gemma-4-26B-A4B-MAPLE-IQ2_XXS.gguf",
+      "size_bytes": 4745987168,
+      "size_gib": 4.42,
+      "mtime_ns": 1795144159695469220,
+      "readable": true,
+      "sha256": "bac3628d8a074e16015c809f963b9e6696d7329039458be386bf869c4cbdeec3",
+      "sha256_source": "computed in 16s",
+      "gguf": {
+        "gguf_version": 3,
+        "tensor_count": 658,
+        "architecture": "gemma4",
+        "name": "Gemma-4-26B-A4B-It",
+        "file_type": 19,
+        "quantization_version": 2,
+        "context_length_trained": 262144,
+        "block_count": 30,
+        "embedding_length": 2816,
+        "feed_forward_length": 2112,
+        "head_count": 16,
+        "head_count_kv": {
+          "__array__": 30,
+          "elem_type": 5
+        },
+        "expert_count": 48,
+        "expert_used_count": 8,
+        "is_moe": true,
+        "rope_freq_base": 1000000.0,
+        "tokenizer_model": "gemma4",
+        "vocab_size": 262144,
+        "has_chat_template": true
+      },
+      "llamacpp_knows_architecture": true,
+      "validation_status": "ok",
+      "tested": {
+        "max_validated_ctx": 131072,
+        "max_validated_kv_type": "f16",
+        "kv_bytes_per_token": 22880,
+        "runs": [
+          {
+            "requested_ctx": 4096,
+            "ok": true,
+            "load_time_s": 6.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 5866,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 5866 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              5167,
+              105
+            ],
+            "cpu_rss_mib": 1004,
+            "kv_cache_mib": 380.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 80.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 300.0
+              }
+            ],
+            "layers_offloaded": "31/31",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 396.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4511.1
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 148.52
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 27.53
+              }
+            ],
+            "n_ctx_reported": 4096,
+            "short": {
+              "wall_s": 1.49,
+              "prompt_n": 32,
+              "prompt_tps": 115.69889362932967,
+              "gen_n": 64,
+              "gen_tps": 51.96069132462649,
+              "text_head": "*   Goal: Write a C++ function to reverse a singly linked list.\n*   Requirement: Explain the complexity (Time and Space)"
+            },
+            "long": {
+              "wall_s": 2.5,
+              "prompt_tokens": 2462,
+              "prompt_tps": 1137.516609960247,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              5209,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              95,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 16384,
+            "ok": true,
+            "load_time_s": 3.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 7786,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 7786 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              5419,
+              105
+            ],
+            "cpu_rss_mib": 1016,
+            "kv_cache_mib": 620.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 320.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 300.0
+              }
+            ],
+            "layers_offloaded": "31/31",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 396.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4511.1
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 160.52
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 39.53
+              }
+            ],
+            "n_ctx_reported": 16384,
+            "short": {
+              "wall_s": 1.53,
+              "prompt_n": 32,
+              "prompt_tps": 108.51871947911015,
+              "gen_n": 64,
+              "gen_tps": 51.08378714115667,
+              "text_head": "*   Goal: Write a C++ function to reverse a singly linked list.\n*   Requirement: Explain the complexity (Time and Space)"
+            },
+            "long": {
+              "wall_s": 9.01,
+              "prompt_tokens": 9842,
+              "prompt_tps": 1141.3714084258772,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              5461,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              95,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 32768,
+            "ok": true,
+            "load_time_s": 3.54,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 10346,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 10346 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              5755,
+              105
+            ],
+            "cpu_rss_mib": 1033,
+            "kv_cache_mib": 940.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 640.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 300.0
+              }
+            ],
+            "layers_offloaded": "31/31",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 396.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4511.1
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 176.52
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 55.53
+              }
+            ],
+            "n_ctx_reported": 32768,
+            "short": {
+              "wall_s": 1.56,
+              "prompt_n": 32,
+              "prompt_tps": 120.40123712271142,
+              "gen_n": 64,
+              "gen_tps": 48.835240749985275,
+              "text_head": "*   Goal: Write a C++ function to reverse a singly linked list.\n*   Requirement: Explain the complexity (Time and Space)"
+            },
+            "long": {
+              "wall_s": 20.64,
+              "prompt_tokens": 19672,
+              "prompt_tps": 975.7127285871926,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              5797,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              96,
+              0
+            ],
+            "kv_type": "f16"
+          },
+          {
+            "requested_ctx": 65536,
+            "ok": true,
+            "load_time_s": 3.18,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 7106,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 7106 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              6427,
+              105
+            ],
+            "cpu_rss_mib": 1065,
+            "kv_cache_mib": 1580.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 1280.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 300.0
+              }
+            ],
+            "layers_offloaded": "31/31",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 396.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4511.1
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 208.52
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 87.53
+              }
+            ],
+            "n_ctx_reported": 65536,
+            "short": {
+              "wall_s": 1.59,
+              "prompt_n": 32,
+              "prompt_tps": 138.57312980404893,
+              "gen_n": 64,
+              "gen_tps": 46.36723735168004,
+              "text_head": "*   Goal: Write a C++ function to reverse a singly linked list.\n*   Requirement: Explain the complexity (Time and Space)"
+            },
+            "long": {
+              "wall_s": 51.3,
+              "prompt_tokens": 39332,
+              "prompt_tps": 775.6825531181426,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              6469,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              95,
+              0
+            ],
+            "kv_type": "f16"
+          },
+          {
+            "requested_ctx": 131072,
+            "ok": true,
+            "load_time_s": 3.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 8386,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 8386 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              7771,
+              105
+            ],
+            "cpu_rss_mib": 1130,
+            "kv_cache_mib": 2860.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 2560.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 300.0
+              }
+            ],
+            "layers_offloaded": "31/31",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 396.0
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4511.1
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 272.52
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 151.53
+              }
+            ],
+            "n_ctx_reported": 131072,
+            "short": {
+              "wall_s": 1.63,
+              "prompt_n": 32,
+              "prompt_tps": 101.98683095045352,
+              "gen_n": 64,
+              "gen_tps": 47.96064486512782,
+              "text_head": "*   Goal: Write a C++ function to reverse a singly linked list.\n*   Requirement: Explain the complexity (Time and Space)"
+            },
+            "long": {
+              "wall_s": 131.88,
+              "prompt_tokens": 78652,
+              "prompt_tps": 600.3530612143956,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              7815,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              87,
+              0
+            ],
+            "kv_type": "f16"
+          }
+        ],
+        "env": {
+          "gpu_count": 2,
+          "gpus": [
+            "Tesla T4",
+            "Tesla T4"
+          ],
+          "two_t4": true,
+          "time_utc": "2026-11-20T05:25:33Z"
+        }
+      },
+      "last_reverified": {
+        "utc": "2026-11-20T06:13:01Z",
+        "sha256_matches_recorded": true,
+        "size_matches": true,
+        "note": "new container after SSH tunnel loss; models read-only"
+      }
+    },
+    "qwen3": {
+      "id": "qwen3",
+      "name": "Qwen3 8B Q4_K_M",
+      "original_path": "/kaggle/working/models/quant/Qwen3-8B-Q4_K_M.gguf",
+      "size_bytes": 5027783488,
+      "size_gib": 4.682,
+      "mtime_ns": 1795144150084710030,
+      "readable": true,
+      "sha256": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785",
+      "sha256_source": "computed in 17s",
+      "gguf": {
+        "gguf_version": 3,
+        "tensor_count": 399,
+        "architecture": "qwen3",
+        "name": "Qwen3 8B Awq Compatible Instruct",
+        "file_type": 15,
+        "quantization_version": 2,
+        "context_length_trained": 40960,
+        "block_count": 36,
+        "embedding_length": 4096,
+        "feed_forward_length": 12288,
+        "head_count": 32,
+        "head_count_kv": 8,
+        "expert_count": null,
+        "expert_used_count": null,
+        "is_moe": false,
+        "rope_freq_base": 1000000.0,
+        "tokenizer_model": "gpt2",
+        "vocab_size": 151936,
+        "has_chat_template": true
+      },
+      "llamacpp_knows_architecture": true,
+      "validation_status": "ok",
+      "tested": {
+        "max_validated_ctx": 32768,
+        "max_validated_kv_type": "f16",
+        "kv_bytes_per_token": 147456,
+        "runs": [
+          {
+            "requested_ctx": 4096,
+            "ok": true,
+            "load_time_s": 4.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 6134,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 6134 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              5267,
+              105
+            ],
+            "cpu_rss_mib": 846,
+            "kv_cache_mib": 576.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 576.0
+              }
+            ],
+            "layers_offloaded": "37/37",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 333.84
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4455.34
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 108.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 36.02
+              }
+            ],
+            "n_ctx_reported": 4096,
+            "short": {
+              "wall_s": 1.92,
+              "prompt_n": 25,
+              "prompt_tps": 215.8708228995769,
+              "gen_n": 64,
+              "gen_tps": 34.87250225702584,
+              "text_head": "Okay, I need to write a C++ function that reverses a singly linked list. Let me think about how to approach this. \n\nFirs"
+            },
+            "long": {
+              "wall_s": 2.74,
+              "prompt_tokens": 2461,
+              "prompt_tps": 1077.6560433689779,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              5285,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              98,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 16384,
+            "ok": true,
+            "load_time_s": 2.51,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 8054,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 8054 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              7007,
+              105
+            ],
+            "cpu_rss_mib": 859,
+            "kv_cache_mib": 2304.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 2304.0
+              }
+            ],
+            "layers_offloaded": "37/37",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 333.84
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4455.34
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 120.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 48.02
+              }
+            ],
+            "n_ctx_reported": 16384,
+            "short": {
+              "wall_s": 1.93,
+              "prompt_n": 25,
+              "prompt_tps": 355.2044556846921,
+              "gen_n": 64,
+              "gen_tps": 33.86151928574769,
+              "text_head": "Okay, I need to write a C++ function that reverses a singly linked list. Let me think about how to approach this. \n\nFirs"
+            },
+            "long": {
+              "wall_s": 11.36,
+              "prompt_tokens": 9841,
+              "prompt_tps": 911.5601405994214,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              7025,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              98,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 32768,
+            "ok": true,
+            "load_time_s": 2.53,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 10614,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 10614 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              9327,
+              105
+            ],
+            "cpu_rss_mib": 876,
+            "kv_cache_mib": 4608.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 4608.0
+              }
+            ],
+            "layers_offloaded": "37/37",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 333.84
+              },
+              {
+                "device": "CUDA0",
+                "mib": 4455.34
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 136.01
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 64.02
+              }
+            ],
+            "n_ctx_reported": 32768,
+            "short": {
+              "wall_s": 2.24,
+              "prompt_n": 25,
+              "prompt_tps": 357.23982223746447,
+              "gen_n": 64,
+              "gen_tps": 29.042924982124774,
+              "text_head": "Okay, I need to write a C++ function that reverses a singly linked list. Let me think about how to approach this. \n\nFirs"
+            },
+            "long": {
+              "wall_s": 28.89,
+              "prompt_tokens": 19671,
+              "prompt_tps": 701.4891175754743,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              9345,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              99,
+              0
+            ],
+            "kv_type": "f16"
+          }
+        ],
+        "env": {
+          "gpu_count": 2,
+          "gpus": [
+            "Tesla T4",
+            "Tesla T4"
+          ],
+          "two_t4": true,
+          "time_utc": "2026-11-20T05:24:36Z"
+        }
+      },
+      "last_reverified": {
+        "utc": "2026-11-20T06:13:17Z",
+        "sha256_matches_recorded": true,
+        "size_matches": true,
+        "note": "new container after SSH tunnel loss; models read-only"
+      }
+    },
+    "fast": {
+      "id": "fast",
+      "name": "Qwen2.5 Coder 1.5B Q4_K_M",
+      "original_path": "/kaggle/working/models/fast/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "size_bytes": 1117320768,
+      "size_gib": 1.041,
+      "mtime_ns": 1795144120154341072,
+      "readable": true,
+      "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "sha256_source": "computed in 3s",
+      "gguf": {
+        "gguf_version": 3,
+        "tensor_count": 339,
+        "architecture": "qwen2",
+        "name": "Qwen2.5 Coder 1.5B Instruct GGUF",
+        "file_type": 15,
+        "quantization_version": 2,
+        "context_length_trained": 32768,
+        "block_count": 28,
+        "embedding_length": 1536,
+        "feed_forward_length": 8960,
+        "head_count": 12,
+        "head_count_kv": 2,
+        "expert_count": null,
+        "expert_used_count": null,
+        "is_moe": false,
+        "rope_freq_base": 1000000.0,
+        "tokenizer_model": "gpt2",
+        "vocab_size": 151936,
+        "has_chat_template": true
+      },
+      "llamacpp_knows_architecture": false,
+      "validation_status": "ok",
+      "tested": {
+        "max_validated_ctx": 32768,
+        "max_validated_kv_type": "f16",
+        "kv_bytes_per_token": 28672,
+        "runs": [
+          {
+            "requested_ctx": 4096,
+            "ok": true,
+            "load_time_s": 1.53,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 2405,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 2405 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              1243,
+              105
+            ],
+            "cpu_rss_mib": 613,
+            "kv_cache_mib": 112.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 112.0
+              }
+            ],
+            "layers_offloaded": "29/29",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 125.19
+              },
+              {
+                "device": "CUDA0",
+                "mib": 934.7
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 68.51
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 16.02
+              }
+            ],
+            "n_ctx_reported": 4096,
+            "short": {
+              "wall_s": 0.59,
+              "prompt_n": 46,
+              "prompt_tps": 768.0235081978161,
+              "gen_n": 64,
+              "gen_tps": 120.45152113063827,
+              "text_head": "```cpp\n#include <iostream>\n\n// Define the structure for a singly linked list node\nstruct ListNode {\n    int val;\n    Lis"
+            },
+            "long": {
+              "wall_s": 0.63,
+              "prompt_tokens": 2461,
+              "prompt_tps": 4898.438510763229,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              1255,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              80,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 16384,
+            "ok": true,
+            "load_time_s": 1.5,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 4325,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 4325 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              1591,
+              105
+            ],
+            "cpu_rss_mib": 625,
+            "kv_cache_mib": 448.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 448.0
+              }
+            ],
+            "layers_offloaded": "29/29",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 125.19
+              },
+              {
+                "device": "CUDA0",
+                "mib": 934.7
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 80.51
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 28.02
+              }
+            ],
+            "n_ctx_reported": 16384,
+            "short": {
+              "wall_s": 0.51,
+              "prompt_n": 46,
+              "prompt_tps": 1004.9153468050246,
+              "gen_n": 64,
+              "gen_tps": 135.35666481177904,
+              "text_head": "```cpp\n#include <iostream>\n\n// Define the structure for a singly linked list node\nstruct ListNode {\n    int val;\n    Lis"
+            },
+            "long": {
+              "wall_s": 2.77,
+              "prompt_tokens": 9841,
+              "prompt_tps": 3772.4638125613346,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              1603,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              96,
+              0
+            ]
+          },
+          {
+            "requested_ctx": 32768,
+            "ok": true,
+            "load_time_s": 1.53,
+            "placement": {
+              "devices": [
+                0
+              ],
+              "split_mode": "none",
+              "estimate_mib": 6885,
+              "reason": "fits on single GPU 0 (14909 MiB free >= 6885 MiB est.)"
+            },
+            "gpu_mem_used_mib_before": [
+              3,
+              3
+            ],
+            "gpu_mem_used_mib_after_load": [
+              2055,
+              105
+            ],
+            "cpu_rss_mib": 642,
+            "kv_cache_mib": 896.0,
+            "kv_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 896.0
+              }
+            ],
+            "layers_offloaded": "29/29",
+            "model_buffers": [
+              {
+                "device": "CPU_Mapped",
+                "mib": 125.19
+              },
+              {
+                "device": "CUDA0",
+                "mib": 934.7
+              }
+            ],
+            "compute_buffers": [
+              {
+                "device": "CUDA0",
+                "mib": 96.51
+              },
+              {
+                "device": "CUDA_Host",
+                "mib": 44.02
+              }
+            ],
+            "n_ctx_reported": 32768,
+            "short": {
+              "wall_s": 0.59,
+              "prompt_n": 46,
+              "prompt_tps": 873.5448831158966,
+              "gen_n": 64,
+              "gen_tps": 117.5866735103355,
+              "text_head": "```cpp\n#include <iostream>\n\n// Define the structure for a singly linked list node\nstruct ListNode {\n    int val;\n    Lis"
+            },
+            "long": {
+              "wall_s": 7.48,
+              "prompt_tokens": 19671,
+              "prompt_tps": 2701.978415215692,
+              "fraction_of_ctx_filled": 0.6
+            },
+            "long_ok": true,
+            "gpu_mem_used_mib_after_inference": [
+              2067,
+              105
+            ],
+            "gpu_util_pct_sample": [
+              95,
+              0
+            ],
+            "kv_type": "f16"
+          }
+        ],
+        "env": {
+          "gpu_count": 2,
+          "gpus": [
+            "Tesla T4",
+            "Tesla T4"
+          ],
+          "two_t4": true,
+          "time_utc": "2026-11-20T05:24:36Z"
+        }
+      },
+      "last_reverified": {
+        "utc": "2026-11-20T06:13:22Z",
+        "sha256_matches_recorded": true,
+        "size_matches": true,
+        "note": "new container after SSH tunnel loss; models read-only"
+      },
+      "validation_evidence": {
+        "gguf_architecture": "qwen2",
+        "gguf_header_valid": true,
+        "load_and_inference": "loaded fully on GPU (29/29 layers) and generated text via llama-server at ctx 4096-32768",
+        "max_validated_ctx": 32768,
+        "correction": "earlier status 'architecture-not-in-build' came from a literal-string search in libllama.so that gave a false negative; real load is authoritative"
+      }
+    }
+  }
+}

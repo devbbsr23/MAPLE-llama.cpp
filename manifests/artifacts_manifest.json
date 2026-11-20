@@ -1,0 +1,49 @@
+{
+  "created_utc": "2026-11-20T08:02:58Z",
+  "format": "tar.gz",
+  "artifacts": [
+    {
+      "name": "MAPLE-llamacpp-cuda.tar.gz",
+      "size": 60260524,
+      "sha256": "0be6e25deedb37c2ab01fd53c761a7efcacddd3ff37d6713e4787bd9062a1b49",
+      "members": 83,
+      "contains_gguf": false,
+      "verified": false,
+      "verified_note": "set to true only by verify_artifacts after checksum + integrity + smoke tests"
+    },
+    {
+      "name": "MAPLE-runtime.tar.gz",
+      "size": 108353,
+      "sha256": "440721c5791ce023e8348931e613df978969e19268d9037111f9984ae6a65b8f",
+      "members": 72,
+      "contains_gguf": false,
+      "verified": false,
+      "verified_note": "set to true only by verify_artifacts after checksum + integrity + smoke tests"
+    },
+    {
+      "name": "MAPLE-python-deps.tar.gz",
+      "size": 796586,
+      "sha256": "1c1d0a3f99c95d3a27b0e5b7aef9d0fa9531bf679351803ee14e4d87f70e3b1b",
+      "members": 6,
+      "contains_gguf": false,
+      "verified": false,
+      "verified_note": "set to true only by verify_artifacts after checksum + integrity + smoke tests"
+    },
+    {
+      "name": "MAPLE-complete.tar.gz",
+      "size": 60742719,
+      "sha256": "156da0c79a69c87e35cde1e202cedc87445876db5028e90efb0c04f285b4bb3e",
+      "members": 15,
+      "contains_gguf": false,
+      "verified": false,
+      "verified_note": "set to true only by verify_artifacts after checksum + integrity + smoke tests"
+    }
+  ],
+  "models_included": false,
+  "model_paths": {
+    "deepseek": "/kaggle/working/models/deepseek/DeepSeek-Coder-V2-Lite-MAPLE-Sub5GB.gguf",
+    "gemma": "/kaggle/working/models/gemma/gemma-4-26B-A4B-MAPLE-IQ2_XXS.gguf",
+    "qwen3": "/kaggle/working/models/quant/Qwen3-8B-Q4_K_M.gguf",
+    "fast": "/kaggle/working/models/fast/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
+  }
+}
