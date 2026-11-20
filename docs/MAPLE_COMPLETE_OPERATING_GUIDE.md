@@ -1,10 +1,10 @@
 # MAPLE Complete Operating Guide
 
-Run the MAPLE multi-model AI server on Kaggle (2× Tesla T4) under heartbeat supervision, protect it with a real API key, reach it from your Windows PC through an SSH forward, and shut it down safely, without help from anyone.
+Run the MAPLE multi-model AI server on Kaggle (2× Tesla T4) under heartbeat supervision, protect it with a real API key, reach it from your Windows PC through an SSH forward, and shut it down safely, independently.
 
 - Project version: **0.1.0** (unchanged by this guide).
 - Scripts described here: `maple_heartbeat.py` and `maple_tunnel.py` (repository folder `supervisor/`, commit `1653815`, pushed to `main` of `devbbsr23/MAPLE-llama.cpp`).
-- This document was prepared on 2026-11-20 by reading the real source and the live Kaggle installation **read-only**. Nothing was started, stopped, signalled, uploaded or committed while writing it.
+- The commands were derived from the actual source of `supervisor/` and checked read-only against a live Kaggle installation (2026-11-20). Evidence levels are given per command by the labels in section 0.
 
 > **Where each command runs.** Every code block is labelled **[KAGGLE NOTEBOOK]**, **[KAGGLE via SSH]** or **[WINDOWS PowerShell]**. Do not mix them up.
 
@@ -14,7 +14,7 @@ Every command block in this guide carries exactly one of four tags. Do not treat
 
 | Tag | Meaning |
 |---|---|
-| **[LIVE-VERIFIED]** | Executed for real against the actual Kaggle server or your Windows PC, either during the preparation of this guide (read-only commands only) or in an earlier approved live stage (Stages 3, 4, 5 and 6a of the heartbeat validation). |
+| **[LIVE-VERIFIED]** | Executed for real against the actual Kaggle server or your Windows PC, either read-only while this guide was prepared or in an earlier approved live stage (Stages 3, 4, 5 and 6a of the heartbeat validation). |
 | **[UNIT-TESTED]** | The behaviour of the real script is covered by the project's automated tests (real code, simulated or loopback I/O, a fake upstream), but the command was **not** executed on the live server. |
 | **[MOCKED]** | The guide's own cell or script was executed with the risky part replaced by a stand-in: process launches mocked, a local stub web server instead of MAPLE, or a synthetic process list. The wrapper logic is checked; the real action is not. |
 | **[UNVERIFIED]** | Never executed in any form. Described from the source code only. |
@@ -30,7 +30,7 @@ A block can mix tags when its parts have different evidence; the tag then names 
 ### Things that differ from what you may expect (read this once)
 1. **The proxy is started with `maple_tunnel.py start --key-stdin`** (key from stdin) or plain `maple_tunnel.py start` (key from the `API_KEY` environment of the process that runs it). The `start` command takes no mode flag, because it is *always* the authentication proxy. The `--auth-only` flag belongs to `run` and `status` only. **[LIVE-VERIFIED]** from the `--help` output of every sub-command.
 2. **Heartbeat API states** are exactly `UNKNOWN`, `ONLINE`, `DEGRADED`, `UNHEALTHY`, `RECOVERING`, `OFFLINE`, `BUSY`, `GAVE_UP` and `BLOCKED` (section 6.4). Whether the *supervisor* is up is a separate fact, shown as `Supervisor : running (pid N)` or `Supervisor : not running`; it is not an API state. `WATCH-ONLY` is a launch mode (`--no-start`), not a state either.
-3. **Known misleading status output (not fixed; the source was not changed).** When the proxy is **not running**, `maple_tunnel.py status --auth-only` prints `listening on []  | loopback only: NO - EXPOSED, stop it <<<` and `Key enforced : NO / not answering`. Nothing is exposed: the empty listener list is simply mis-evaluated as "not loopback-only". I saw this live on 2026-11-20 with port 8088 closed. **Do not use that line to decide whether the proxy is exposed.** Use the port-listener check in section 7.5 instead.
+3. **Known misleading status output (not fixed in this version).** When the proxy is **not running**, `maple_tunnel.py status --auth-only` prints `listening on []  | loopback only: NO - EXPOSED, stop it <<<` and `Key enforced : NO / not answering`. Nothing is exposed: the empty listener list is simply mis-evaluated as "not loopback-only". Observed live on 2026-11-20 with port 8088 closed. **Do not use that line to decide whether the proxy is exposed.** Use the port-listener check in section 7.5 instead.
 4. **A key generated in the notebook (Option B) cannot conveniently be used from Windows**: the scripts deliberately never print or store it, so the only way to move it is a secure transfer you would have to build yourself. Section 7.2 explains why. For a Windows client use **Option A**.
 5. The proxy against real MAPLE, the Windows forward to 8088 and the real `stop` commands have **never been run live**. Section 14 lists exactly what is proven and by which method.
 
@@ -294,7 +294,7 @@ Models are external files: `/kaggle/working/models/{deepseek,gemma,quant,fast}/�
 **Never stop pid 1971, or any cloudflared you did not start, to "fix" something.** Doing so cuts off your only way into the machine. Closing a Windows forward (Ctrl+C) never touches it.
 
 ### 3.2 Using your existing SSH setup
-This guide **does not contain an SSH-setup cell, and none should be copied from anywhere else**. The cell that creates your SSH access is the one you already use in your Kaggle notebook; I could not find its source in your project files, so I neither reproduce nor invent it.
+This guide **does not contain an SSH-setup cell, and none should be copied from anywhere else**. The cell that creates your SSH access is the one you already use in your Kaggle notebook; it is deliberately neither reproduced nor invented here.
 
 What is known, **[LIVE-VERIFIED]** by read-only inspection of the running session: `sshd` is listening, and pid 1971 runs `/usr/local/bin/cloudflared tunnel --url ssh://localhost:2222` with its output written to `/tmp/tunnel.log`.
 
@@ -805,7 +805,7 @@ Key requirements: 24–256 printable ASCII characters, no spaces. `secrets.token
 | Can your Windows client use it? | **Yes**: it is already in your PowerShell window | **No**, not without printing or copying it out of Kaggle, which you must not do |
 | Good for | Normal use: SDK / scripts on your PC | Only clients that run inside Kaggle |
 
-**Recommendation: Option A.** Option B is provided because you asked for it, but it cannot conveniently serve a Windows client.
+**Recommendation: Option A.** Option B is provided for completeness, but it cannot conveniently serve a Windows client.
 
 **Why a notebook-generated key cannot conveniently be used on Windows.**
 - The key is created inside the notebook kernel and handed to the proxy through its environment. By design the scripts **never print, log or save it**, and nothing sends it back to you. After the cell finishes, the only copies are in kernel memory and in the proxy's process environment.
@@ -1140,7 +1140,7 @@ try { Invoke-WebRequest http://127.0.0.1:8088/v1/models -UseBasicParsing } catch
 ```powershell
 python -m pip install openai
 ```
-Tested with `openai 2.24.0` (record B's SDK test and this guide's checks). Other 1.x/2.x versions normally work, not verified.
+Tested with `openai 2.24.0` (validation record B's SDK test and the checks behind this guide). Other 1.x/2.x versions normally work, not verified.
 
 ### 10.2 The example
 It reads the key **only** from the environment (`MAPLE_API_KEY`), sets `base_url` to `http://127.0.0.1:8088/v1`, lists the models first (this also proves the key), refuses an unknown model name before sending, sends one chat request, prints the serving model (`X-MAPLE-Model`) and the route, and never prints the key. Save as `maple_client.py`.
