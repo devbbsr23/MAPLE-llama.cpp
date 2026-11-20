@@ -81,9 +81,14 @@ instead of a service install). See [architecture](docs/ARCHITECTURE.md).
 * Documented `curl` and OpenAI Python SDK examples run against a live API: on the Kaggle host (SDK 3.57.0) and **from a Windows PC through an SSH port-forward** (SDK 2.24.0: models, `fast`, `quant` alias, automatic routing, 404 for an unknown model).
 * Restoration into a clean directory from the archives: restore steps and a 29-check probe passed (separate from the working install).
 * Without GPU or models (any machine): the HTTP tests that need no model run and pass.
+* A **second, fresh Kaggle session** (a different host, also 2 x Tesla T4; records kept separate from the first session): restore with the public
+  `restore_kaggle.py` from archives uploaded from a PC, models downloaded from their sources, 28/29 local checks and 10/10 Windows-over-SSH-tunnel SDK checks.
+  **One check failed and is recorded as a failure:** `gemma` returned an empty reply to one open-ended prompt because its reasoning used all `max_tokens`
+  (it answered other prompts normally). Details: [`docs/validation/`](docs/validation/VALIDATION_B_kaggle2_fresh_environment.md);
+  first-session history: [`docs/validation/`](docs/validation/VALIDATION_A_previous_kaggle_historical.md). Neither record validates the other.
 
 **Not tested:** hardware other than two Tesla T4; Open WebUI and editor extensions (expected to work because the endpoints they use are implemented);
-a brand-new Kaggle session started from nothing; **128K context for any model except gemma**
+restoration from a Kaggle Dataset (**BLOCKED**: the public runtime Dataset does not exist yet, so Dataset-based restoration is untested); **128K context for any model except gemma**
 (a DeepSeek 131072 attempt did not complete and is recorded as incomplete). Compatibility beyond Kaggle's CUDA 13 image is not claimed.
 
 ## Benchmark results

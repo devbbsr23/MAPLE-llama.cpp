@@ -12,3 +12,5 @@ First public version of MAPLE-llama.cpp.
 * Kaggle build and restore notebooks, local recovery scripts, backup of the original compiled archive.
 * Models are never included or downloaded; `MAPLE_MODEL_<ID>` overrides let you point at your own files.
 * Tests: 56 passed on a two-T4 Kaggle host on 2026-11-20 (including HTTP-level tests against the real server); Bonsai and Ollama are not used.
+* Validation records: `docs/validation/` keeps the first-session history (A) and a fresh second-session test (B) separate, with raw results in `manifests/validation/`.
+  Record B includes one recorded failure (gemma empty reply on an open-ended prompt) and marks Kaggle Dataset restoration as BLOCKED (untested).

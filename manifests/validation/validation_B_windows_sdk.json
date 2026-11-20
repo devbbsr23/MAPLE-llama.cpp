@@ -1,0 +1,52 @@
+[
+  {
+    "name": "PC curl-equivalent /health via tunnel",
+    "ok": true,
+    "detail": "{\"deepseek\": \"ok\", \"gemma\": \"ok\", \"qwen3\": \"ok\", \"fast\": \"ok\"}"
+  },
+  {
+    "name": "SDK models.list()",
+    "ok": true,
+    "detail": "['deepseek', 'gemma', 'qwen3', 'fast', 'auto']"
+  },
+  {
+    "name": "SDK chat deepseek",
+    "ok": true,
+    "detail": "served_by=deepseek 29.3s tokens=1500 reply='Certainly! Below is a Python function that takes a number an'"
+  },
+  {
+    "name": "SDK chat gemma   ",
+    "ok": true,
+    "detail": "served_by=gemma 15.4s tokens=526 reply='Here is a simple Python function to accomplish this:\\n\\n```pyt'"
+  },
+  {
+    "name": "SDK chat qwen3   ",
+    "ok": true,
+    "detail": "served_by=qwen3 20.6s tokens=538 reply=\"Here's a Python function that returns the square of a given \""
+  },
+  {
+    "name": "SDK chat fast    ",
+    "ok": true,
+    "detail": "served_by=fast 3.0s tokens=60 reply='```python\\ndef square_number(number):\\n    \"\"\"\\n    Calculate t'"
+  },
+  {
+    "name": "SDK chat quant   ",
+    "ok": true,
+    "detail": "served_by=qwen3 20.7s tokens=535 reply=\"Here's a Python function that returns the square of a given \""
+  },
+  {
+    "name": "SDK automatic routing (model=auto)",
+    "ok": true,
+    "detail": "routed=deepseek | highest specialist score (8) among ['deepseek']"
+  },
+  {
+    "name": "SDK streaming",
+    "ok": true,
+    "detail": "13 content chunks: '1, 2, 3, 4, 5'"
+  },
+  {
+    "name": "SDK unknown model raises NotFoundError",
+    "ok": true,
+    "detail": "NotFoundError"
+  }
+]

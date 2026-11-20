@@ -1,0 +1,310 @@
+{
+  "environment": "kaggle2 86482ac06d47",
+  "started_utc": "2026-11-20T10:14:54Z",
+  "checks": [
+    {
+      "name": "archive SHA256 (3 archives) on kaggle2",
+      "ok": true,
+      "detail": "MAPLE-llamacpp-cuda.tar.gz: OK; MAPLE-runtime.tar.gz: OK; MAPLE-python-deps.tar.gz: OK"
+    },
+    {
+      "name": "restored executables are executable",
+      "ok": true,
+      "detail": "47 executables, non-executable: none"
+    },
+    {
+      "name": "shared-library resolution (ldd, 0 unresolved)",
+      "ok": true,
+      "detail": "unresolved: none"
+    },
+    {
+      "name": "CUDA/cuBLAS/NCCL resolve from host, llama libs from restored dir",
+      "ok": true,
+      "detail": "{\"libcudart.so.13\": \"/usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.13\", \"libcublas.so.13\": \"/usr/local/cuda/targets/x86_64-linux/lib/libcublas.so.13\", \"libcublasLt.so.13\": \"/usr/local/cuda/targets/x86_64-linux/lib/libcublasLt.so.13\", \"libnccl.so.2\": \"/lib/x86_64-linux-gnu/libnccl.so.2\", \"libggml-cuda.so.1\": \"/kaggle/working/MAPLE-llama.cpp/vendor/llamacpp/llama.cpp/build/bin/libggml-cuda.s"
+    },
+    {
+      "name": "llama.cpp CUDA backend sees GPUs",
+      "ok": true,
+      "detail": "[('CUDA0', 'Tesla T4', '14911'), ('CUDA1', 'Tesla T4', '14911')]"
+    },
+    {
+      "name": "llama-server --version (no compile)",
+      "ok": true,
+      "detail": "version: 1.0.0-dev (build 1, commit ef3848f) | built with GNU 13.3.0 for Linux x86_64"
+    },
+    {
+      "name": "GPUs idle before start",
+      "ok": true,
+      "detail": "[(0, 0, 2), (1, 0, 2)]"
+    },
+    {
+      "name": "API started via scripts/start_maple.sh on :8000",
+      "ok": true,
+      "detail": "pid 2371"
+    },
+    {
+      "name": "/health ok, all four model files ok, nothing loaded yet",
+      "ok": true,
+      "detail": "{\"status\": \"ok\", \"uptime_s\": 0, \"models\": {\"deepseek\": \"ok\", \"gemma\": \"ok\", \"qwen3\": \"ok\", \"fast\": \"ok\"}, \"model_paths_ok\": true, \"runtime\": {\"loaded\": null, \"inflight\": 0, \"switches\": 0, \"healthy\": false}}"
+    },
+    {
+      "name": "/v1/models lists 4 specialists + auto, alias quant->qwen3",
+      "ok": true,
+      "detail": "['deepseek', 'gemma', 'qwen3', 'fast', 'auto'] {'quant': 'qwen3'}"
+    },
+    {
+      "name": "/v1/route (cpp)",
+      "ok": true,
+      "detail": "{\"model\": \"deepseek\", \"reason\": \"highest specialist score (8) among ['deepseek']\", \"scores\": {\"deepseek\": 8, \"gemma\": 0, \"qwen3\": 0, \"fast\": 0}, \"explicit\": false}"
+    },
+    {
+      "name": "/v1/route (general)",
+      "ok": true,
+      "detail": "{\"model\": \"gemma\", \"reason\": \"highest specialist score (4) among ['gemma']\", \"scores\": {\"deepseek\": 0, \"gemma\": 4, \"qwen3\": 0, \"fast\": 0}, \"explicit\": false}"
+    },
+    {
+      "name": "/v1/route (arch)",
+      "ok": true,
+      "detail": "{\"model\": \"qwen3\", \"reason\": \"highest specialist score (13) among ['qwen3']\", \"scores\": {\"deepseek\": 0, \"gemma\": 0, \"qwen3\": 13, \"fast\": 0}, \"explicit\": false}"
+    },
+    {
+      "name": "/v1/route (quick)",
+      "ok": true,
+      "detail": "{\"model\": \"gemma\", \"reason\": \"highest specialist score (4) among ['gemma']\", \"scores\": {\"deepseek\": 0, \"gemma\": 4, \"qwen3\": 0, \"fast\": 0}, \"explicit\": false}"
+    },
+    {
+      "name": "explicit deepseek -> deepseek",
+      "ok": true,
+      "detail": "{\"served_by\": \"deepseek\", \"http\": 200, \"seconds\": 35.9, \"completion_tokens\": 1024, \"gpu_peak_util\": {\"0\": 97, \"1\": 0}, \"gpu_peak_mem_mib\": {\"0\": 5971, \"1\": 3}, \"offload\": \"n/a\", \"llama_server_pids\": [2387], \"reply\": \"A mutex is a lock that is used to ensure that only one thread can execute a part\"}"
+    },
+    {
+      "name": "explicit gemma    -> gemma",
+      "ok": false,
+      "detail": "{\"served_by\": \"gemma\", \"http\": 200, \"seconds\": 40.1, \"completion_tokens\": 1024, \"gpu_peak_util\": {\"0\": 95, \"1\": 0}, \"gpu_peak_mem_mib\": {\"0\": 5189, \"1\": 3}, \"offload\": \"n/a\", \"llama_server_pids\": [2648], \"reply\": \"\"}"
+    },
+    {
+      "name": "explicit qwen3    -> qwen3",
+      "ok": true,
+      "detail": "{\"served_by\": \"qwen3\", \"http\": 200, \"seconds\": 18.3, \"completion_tokens\": 235, \"gpu_peak_util\": {\"0\": 98, \"1\": 0}, \"gpu_peak_mem_mib\": {\"0\": 5269, \"1\": 3}, \"offload\": \"n/a\", \"llama_server_pids\": [2939], \"reply\": \"A mutex is a synchronization mechanism that ensures only one thread can access a\"}"
+    },
+    {
+      "name": "explicit fast     -> fast",
+      "ok": true,
+      "detail": "{\"served_by\": \"fast\", \"http\": 200, \"seconds\": 3.6, \"completion_tokens\": 32, \"gpu_peak_util\": {\"0\": 26, \"1\": 0}, \"gpu_peak_mem_mib\": {\"0\": 1243, \"1\": 3}, \"offload\": \"n/a\", \"llama_server_pids\": [3085], \"reply\": \"A mutex is a synchronization mechanism used to protect shared resources in a mul\"}"
+    },
+    {
+      "name": "explicit quant    -> qwen3",
+      "ok": true,
+      "detail": "{\"served_by\": \"qwen3\", \"http\": 200, \"seconds\": 11.6, \"completion_tokens\": 277, \"gpu_peak_util\": {\"0\": 98, \"1\": 0}, \"gpu_peak_mem_mib\": {\"0\": 5269, \"1\": 3}, \"offload\": \"n/a\", \"llama_server_pids\": [3120], \"reply\": \"A mutex is a lock that ensures only one thread can access a shared resource at a\"}"
+    },
+    {
+      "name": "automatic routing (model=auto)",
+      "ok": true,
+      "detail": "deepseek | highest specialist score (11) among ['deepseek']"
+    },
+    {
+      "name": "automatic routing (no model field)",
+      "ok": true,
+      "detail": "deepseek | highest specialist score (11) among ['deepseek']"
+    },
+    {
+      "name": "model switching (7 requests, exactly 1 llama-server each time)",
+      "ok": true,
+      "detail": "switches 6->13 trace=[('fast', 'fast', 1), ('deepseek', 'deepseek', 1), ('fast', 'fast', 1), ('gemma', 'gemma', 1), ('qwen3', 'qwen3', 1), ('deepseek', 'deepseek', 1), ('quant', 'qwen3', 1)]"
+    },
+    {
+      "name": "OpenAI chat.completion response shape",
+      "ok": true,
+      "detail": "keys=['choices', 'created', 'id', 'model', 'object', 'system_fingerprint', 'timings', 'usage', 'x_maple'] content-type=application/json"
+    },
+    {
+      "name": "streaming SSE (chunks + [DONE])",
+      "ok": true,
+      "detail": "13 chunks, content-type=text/event-stream"
+    },
+    {
+      "name": "/v1/completions",
+      "ok": true,
+      "detail": "{\"choices\": [{\"text\": \"\\n    return a + b\\n\\ndef subtract(a, b):\\n    return a - b\\n\\ndef multiply(a, b\", \"index\": 0, \"logprobs\": null, \"finish_reason\": \"length"
+    },
+    {
+      "name": "unknown model -> 404 (not replaced)",
+      "ok": true,
+      "detail": "{\"error\": {\"message\": \"unknown model 'does-not-exist' (valid: deepseek, gemma, qwen3, fast, auto)\", \"type\": \"model_not_found\", \"code\": \"mode"
+    },
+    {
+      "name": "invalid JSON -> 400",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "name": "unknown path -> 404",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "name": "final health healthy; API still running",
+      "ok": true,
+      "detail": "{\"loaded\": \"fast\", \"inflight\": 0, \"switches\": 14, \"healthy\": true}"
+    }
+  ],
+  "lib_resolution": {
+    "libcudart.so.13": "/usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.13",
+    "libcublas.so.13": "/usr/local/cuda/targets/x86_64-linux/lib/libcublas.so.13",
+    "libcublasLt.so.13": "/usr/local/cuda/targets/x86_64-linux/lib/libcublasLt.so.13",
+    "libnccl.so.2": "/lib/x86_64-linux-gnu/libnccl.so.2",
+    "libggml-cuda.so.1": "/kaggle/working/MAPLE-llama.cpp/vendor/llamacpp/llama.cpp/build/bin/libggml-cuda.so.1",
+    "libllama.so.0": "-",
+    "libcuda.so.1": "-"
+  },
+  "gpus_idle": [
+    [
+      0,
+      0,
+      2
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "routing_preview": {
+    "cpp": "deepseek",
+    "general": "gemma",
+    "arch": "qwen3",
+    "quick": "gemma"
+  },
+  "inference": {
+    "deepseek": {
+      "served_by": "deepseek",
+      "http": 200,
+      "seconds": 35.9,
+      "completion_tokens": 1024,
+      "gpu_peak_util": {
+        "0": 97,
+        "1": 0
+      },
+      "gpu_peak_mem_mib": {
+        "0": 5971,
+        "1": 3
+      },
+      "offload": "n/a",
+      "llama_server_pids": [
+        2387
+      ],
+      "reply": "A mutex is a lock that is used to ensure that only one thread can execute a part"
+    },
+    "gemma": {
+      "served_by": "gemma",
+      "http": 200,
+      "seconds": 40.1,
+      "completion_tokens": 1024,
+      "gpu_peak_util": {
+        "0": 95,
+        "1": 0
+      },
+      "gpu_peak_mem_mib": {
+        "0": 5189,
+        "1": 3
+      },
+      "offload": "n/a",
+      "llama_server_pids": [
+        2648
+      ],
+      "reply": ""
+    },
+    "qwen3": {
+      "served_by": "qwen3",
+      "http": 200,
+      "seconds": 18.3,
+      "completion_tokens": 235,
+      "gpu_peak_util": {
+        "0": 98,
+        "1": 0
+      },
+      "gpu_peak_mem_mib": {
+        "0": 5269,
+        "1": 3
+      },
+      "offload": "n/a",
+      "llama_server_pids": [
+        2939
+      ],
+      "reply": "A mutex is a synchronization mechanism that ensures only one thread can access a"
+    },
+    "fast": {
+      "served_by": "fast",
+      "http": 200,
+      "seconds": 3.6,
+      "completion_tokens": 32,
+      "gpu_peak_util": {
+        "0": 26,
+        "1": 0
+      },
+      "gpu_peak_mem_mib": {
+        "0": 1243,
+        "1": 3
+      },
+      "offload": "n/a",
+      "llama_server_pids": [
+        3085
+      ],
+      "reply": "A mutex is a synchronization mechanism used to protect shared resources in a mul"
+    },
+    "quant": {
+      "served_by": "qwen3",
+      "http": 200,
+      "seconds": 11.6,
+      "completion_tokens": 277,
+      "gpu_peak_util": {
+        "0": 98,
+        "1": 0
+      },
+      "gpu_peak_mem_mib": {
+        "0": 5269,
+        "1": 3
+      },
+      "offload": "n/a",
+      "llama_server_pids": [
+        3120
+      ],
+      "reply": "A mutex is a lock that ensures only one thread can access a shared resource at a"
+    }
+  },
+  "final_health": {
+    "status": "ok",
+    "uptime_s": 189,
+    "models": {
+      "deepseek": "ok",
+      "gemma": "ok",
+      "qwen3": "ok",
+      "fast": "ok"
+    },
+    "model_paths_ok": true,
+    "runtime": {
+      "loaded": "fast",
+      "inflight": 0,
+      "switches": 14,
+      "healthy": true
+    }
+  },
+  "gpus_after": [
+    [
+      0,
+      1243,
+      76
+    ],
+    [
+      1,
+      3,
+      0
+    ]
+  ],
+  "llama_server_pids": [
+    3367
+  ],
+  "api_pid": 2371,
+  "finished_utc": "2026-11-20T10:18:05Z",
+  "summary": "28/29 checks passed"
+}
