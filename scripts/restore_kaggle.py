@@ -111,18 +111,43 @@ def run(cmd, env=None, timeout=60):
 
 
 # ---------------------------------------------------------------- stage: locate + verify
-def locate(search):
-    found = {}
+def locate(search, deep_roots=("/kaggle/input",), deep_depth=6, shallow_depth=2, max_dirs=3000):
+    """Find the deployment archives. Breadth-first, shallowest first, so earlier behaviour is unchanged:
+    for each search root the root itself is checked, then its children, then deeper levels.
+
+    Kaggle mounts Datasets at differing depths (e.g. /kaggle/input/<slug>/ or /kaggle/input/datasets/<owner>/<slug>/),
+    so roots under /kaggle/input and any folder given with --artifacts are searched up to ``deep_depth`` levels;
+    other roots keep the old two-level limit. Symlinked directories are not followed. Only directory names are listed
+    (never file contents); at most ``max_dirs`` directories are visited per root.
+    """
+    found, dupes = {}, {}
     for d in search:
         dp = Path(d)
         if not dp.is_dir():
             continue
-        cands = [dp] + [p for p in dp.glob("*") if p.is_dir()] + [p for p in dp.glob("*/*") if p.is_dir()]
-        for c in cands[:200]:
+        is_deep = str(dp).startswith(tuple(deep_roots)) or d in explicit_roots
+        limit = deep_depth if is_deep else shallow_depth
+        queue, seen = [(dp, 0)], 0
+        while queue and seen < max_dirs:
+            c, depth = queue.pop(0)
+            seen += 1
             for k, n in NAMES.items():
-                if k not in found and (c / n).is_file():
-                    found[k] = c / n
+                if (c / n).is_file():
+                    if k not in found:
+                        found[k] = c / n
+                    elif found[k] != c / n:
+                        dupes.setdefault(k, []).append(str(c / n))
+            if depth < limit:
+                try:
+                    queue.extend((x, depth + 1) for x in sorted(c.iterdir()) if x.is_dir() and not x.is_symlink())
+                except OSError:
+                    pass
+    for k, extra in dupes.items():
+        print("note: %s also found at %s; using %s" % (NAMES[k], ", ".join(extra), found[k]))
     return found
+
+
+explicit_roots = set()
 
 
 def expected_checksums(found):
@@ -210,6 +235,8 @@ def main(argv=None):
         die(6, "Python >= 3.9 required")
 
     # 2. locate + verify archives
+    if a.artifacts:
+        explicit_roots.update(a.artifacts)
     found = locate(a.artifacts or DEFAULT_SEARCH)
     report["archives_found"] = {k: str(v) for k, v in found.items()}
     have_parts = all(k in found for k in ("llamacpp", "runtime"))
