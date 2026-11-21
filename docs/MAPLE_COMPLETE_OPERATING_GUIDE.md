@@ -24,7 +24,7 @@ A block can mix tags when its parts have different evidence; the tag then names 
 ### Where the files are
 - The heartbeat, tunnel, tests and docs of the supervisor are in `supervisor/` of this repository (added in commit `1653815`).
 - This guide and `QUICK_START.md` live in `docs/`. They describe project version **0.1.0**; no version was changed by adding them.
-- The deployed Kaggle copy of `maple_tunnel.py` (`b255bce5…`) differs from the repository copy (`supervisor/maple_tunnel.py`) only by the `__version__` string (the Kaggle copy says `0.2.0`, the repository copy `0.1.0`). `maple_heartbeat.py` is identical everywhere (`8af6007b…`).
+- The deployed Kaggle copy of `maple_tunnel.py` (`b255bce5…`) differs from the repository copy (`supervisor/maple_tunnel.py`) by the `__version__` string (the Kaggle copy says `0.2.0`, the repository copy `0.1.0`) and by one sentence of help text: the older copies name a non-existent option for `start` in their SSH-mode instructions (the real command is `start --key-stdin`, as everywhere in this guide). Behaviour is identical; the repository copy is now `1a145835…`. `maple_heartbeat.py` is identical everywhere (`8af6007b…`).
 - The verification tags below describe the state when the guide was written (2026-11-20). Anything tagged **[UNVERIFIED]** may have been verified since; check the validation records before relying on that tag.
 
 ### Things that differ from what you may expect (read this once)

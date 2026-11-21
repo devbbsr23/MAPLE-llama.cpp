@@ -589,7 +589,7 @@ class TunnelManager:
                 "  then use           : http://127.0.0.1:%d/v1  (any api_key string; MAPLE itself has no authentication)\n"
                 "A public tunnel is OFF by default because MAPLE has no built-in authentication. "
                 "Run with --public to expose it through the Bearer-key proxy.\n"
-                "For a REAL API key over SSH (no Cloudflare): `maple_tunnel.py start --auth-only` (key from $API_KEY), then forward port %d instead."
+                "For a REAL API key over SSH (no Cloudflare): pipe the key into `maple_tunnel.py start --key-stdin` (or set $API_KEY and run `maple_tunnel.py start`), then forward port %d instead."
                 % (c.api_port, c.api_port, c.ssh_alias, c.api_port, c.auth_port))
 
     def run_ssh_mode(self) -> int:

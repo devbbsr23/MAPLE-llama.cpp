@@ -54,6 +54,8 @@ curl http://127.0.0.1:8000/v1/chat/completions -H "Content-Type: application/jso
 ```
 Or run `notebooks/MAPLE_Kaggle_Restore.ipynb`. Details: [Kaggle deployment](docs/KAGGLE_DEPLOYMENT.md), [restoration](docs/RESTORATION.md).
 
+One-cell alternative that also starts the heartbeat and checks the API: [Kaggle one-cell bootstrap](docs/KAGGLE_BOOTSTRAP.md) (`notebooks/maple_bootstrap_cell.py`).
+
 ## Specialists and routing
 
 | ID | Model | Specialist |

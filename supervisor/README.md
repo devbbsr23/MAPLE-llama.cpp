@@ -164,10 +164,10 @@ Never use `pkill cloudflared` or `pkill python`: that would also kill your SSH t
 # run from inside the supervisor/ folder
 python -m unittest discover -s tests -v
 ```
-Three tests in `tests/test_maple_tunnel_authonly.py` (class `RealProcess`) start a throw-away `maple_tunnel.py --auth-only` process on random loopback ports against a fake upstream; everything else is fully mocked. They never contact MAPLE, Kaggle or Cloudflare.
+Three tests in `tests/test_maple_tunnel_authonly.py` (class `RealProcess`) start a throw-away `maple_tunnel.py run --auth-only` process on random loopback ports against a fake upstream; everything else is fully mocked. They never contact MAPLE, Kaggle or Cloudflare.
 
 See `docs/TEST_RESULTS.md`, `docs/COMPARISON.md`, `SHA256SUMS.txt` and `UPLOAD_MANIFEST.sha256`.
 
 
 ## `--auth-only` mode (real Bearer-key proxy, loopback only)
-`maple_tunnel.py run|start|status|stop --auth-only` puts a key-checking proxy on 127.0.0.1:8088 in front of MAPLE (127.0.0.1:8000). No Cloudflare is started. See **docs/AUTH_ONLY_GUIDE.md** for design, limits, key handling and the Kaggle/Windows commands. Unit-tested (mocks and loopback); uploaded to the Kaggle host but not yet activated or tested live against real MAPLE.
+`maple_tunnel.py start [--key-stdin]` (detached) or `maple_tunnel.py run --auth-only` (foreground) puts a key-checking proxy on 127.0.0.1:8088 in front of MAPLE (127.0.0.1:8000). No Cloudflare is started. See **docs/AUTH_ONLY_GUIDE.md** for design, limits, key handling and the Kaggle/Windows commands. Unit-tested (mocks and loopback); uploaded to the Kaggle host but not yet activated or tested live against real MAPLE.

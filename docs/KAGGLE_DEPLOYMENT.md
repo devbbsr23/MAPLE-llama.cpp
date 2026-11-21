@@ -13,6 +13,8 @@ or on your own computer: (1) the archive set from the GitHub release, (2) your f
 
 ## Every new session
 
+> Shortcut: [KAGGLE_BOOTSTRAP.md](KAGGLE_BOOTSTRAP.md) replaces the manual steps below with one notebook cell (verified file install, restore if needed, heartbeat, API, `/health` and `/v1/models`). The manual steps remain valid.
+
 1. New notebook, accelerator **GPU T4 x2**, attach both datasets (they appear under `/kaggle/input/...`).
 2. **Clone MAPLE** (needs Internet enabled; or unpack `MAPLE-runtime.tar.gz` from the dataset):
    ```bash

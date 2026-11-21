@@ -5,7 +5,7 @@ Status: implemented and unit-tested (mocks + loopback). Uploaded to the Kaggle h
 Paths below use the folder the scripts were deployed to on Kaggle, `/kaggle/working/MAPLE_compatible/`; adjust them if you copy `supervisor/` elsewhere.
 
 ## What it is
-`maple_tunnel.py run|start --auth-only` starts a small reverse proxy:
+`maple_tunnel.py start [--key-stdin]` (detached; this is the normal way) or `maple_tunnel.py run --auth-only` (foreground, for debugging) starts a small reverse proxy. `start` has no `--auth-only` option because it always starts this proxy:
 
     Windows OpenAI SDK --(ssh -L 8088)--> 127.0.0.1:8088 [auth proxy] --> 127.0.0.1:8000 [MAPLE API] --> 127.0.0.1:8081 [llama-server, internal]
 
