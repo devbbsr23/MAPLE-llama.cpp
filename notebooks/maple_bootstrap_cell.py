@@ -27,9 +27,9 @@ FILES = [
  ('maple_heartbeat.py', 'install', ('8af6007bba5d6970567e4b9e33f0b8018cf616c2188e2e5b8073c6fcf532061d',), 53241, 'supervisor/maple_heartbeat.py', 'required'),
  ('maple_tunnel.py', 'install', ('1a14583571b3d67d137cdc2e18d90c82c1debf0efeca08e962fa8af707cfd99f', '42f17d0985eed27a95bce29806641b4f55a42ae25ecad91c302cd2be1841fe80', 'b255bce5d806124bf646487a51b325cf53b7f98bf72d41fd19282755cbfe3a75'), (62747, 62699), 'supervisor/maple_tunnel.py', 'optional'),
  ('MAPLE-llamacpp-cuda.tar.gz', 'artifact', ('0be6e25deedb37c2ab01fd53c761a7efcacddd3ff37d6713e4787bd9062a1b49',), 60260524, None, 'artifact'),
- ('MAPLE-runtime.tar.gz', 'artifact', ('7aa3b16340f18bab955efaeaab4d56cae8e7f201c9aba229ac1b92d2f7132198',), 177758, None, 'artifact'),
+ ('MAPLE-runtime.tar.gz', 'artifact', ('1dfc374555dabeaa23e0fcb758366108c47c90c2fea8133405f3e64798d8905e',), 177850, None, 'artifact'),
  ('MAPLE-python-deps.tar.gz', 'artifact', ('1c1d0a3f99c95d3a27b0e5b7aef9d0fa9531bf679351803ee14e4d87f70e3b1b',), 796586, None, 'artifact'),
- ('checksums.sha256', 'artifact', ('33c3245d2f6e356b686c8ba3e3c4ce31d1a7ba5639e13dea64f0a34eb3c0f91e',), 271, None, 'artifact'),
+ ('checksums.sha256', 'artifact', ('825e268821817736f00bb77c381e912c05dcde1804c2f86378cbd9366020f199',), 271, None, 'artifact'),
 ]
 # --------------------------------------------------------------------------------------------------------------
 GH_BASE = "https://raw.githubusercontent.com/devbbsr23/MAPLE-llama.cpp/%s/"   # %s = commit or branch. Safe with a branch: nothing is written or run unless its size and SHA256 match the pins above.
