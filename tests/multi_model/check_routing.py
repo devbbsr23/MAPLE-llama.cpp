@@ -60,6 +60,7 @@ d = sel("Add docstrings to every function in this file."); ch = d.chain_decision
 check("documentation chain is gemma, qwen3, fast all qualified", [x.model for x in ch] == ["gemma", "qwen3", "fast"] and all(x.certified for x in ch))
 d = sel("Write a Python function that merges two sorted lists."); ch = d.chain_decisions()
 check("coding chain: qwen3 certified, then uncertified fallbacks", [x.model for x in ch][:1] == ["qwen3"] and not ch[1].certified and ch[1].verify_required)
+d = sel("Triage this ticket in one line: login page returns 500."); check("explicit triage request -> fast, uncertified, verify required", d.model == "fast" and not d.certified and d.verify_required)
 # disabled -> plain router
 cfg2 = dict(CFG); cfg2["routing"] = {}
 check("no routing block -> original keyword Router", type(make_router(cfg2, MODEL_ROSTER, fm)) is Router)

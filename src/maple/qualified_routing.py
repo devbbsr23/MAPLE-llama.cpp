@@ -54,7 +54,7 @@ _RULES = {
     "triage": [
         (r"\bcommit message\b|\bgit (commit|log|diff|rebase|stash|status|branch)\b", 6),
         (r"\bone[- ]?liner\b|\bregex\b|\bregular expression\b|\bsed\b|\bawk\b|\bgrep\b|\bbash\b|\bshell (command|script)\b|\bpowershell\b", 5),
-        (r"\b(quick(ly)?|rename|typo|lint)\b|\bsyntax check\b", 3), (r"\bsummari[sz]e (this |the )?(diff|log|output|error)\b", 4)],
+        (r"\b(quick(ly)?|rename|typo|lint)\b|\bsyntax check\b", 3), (r"\btriage\b|\bone[- ]line (summary|answer|reply)\b|\bin one line\b", 5), (r"\bsummari[sz]e (this |the )?(diff|log|output|error)\b", 4)],
 }
 _PRIORITY = ["test_generation", "code_review", "debugging", "documentation", "architecture", "reasoning", "coding", "triage"]
 _COMPILED = {c: [(re.compile(p, re.I), w) for p, w in rs] for c, rs in _RULES.items()}
