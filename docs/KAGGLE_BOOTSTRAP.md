@@ -121,3 +121,11 @@ If you change a script, recompute its SHA256, then update three places together:
 
 ## Multi-model Dataset (2026-11-22)
 The multi-model release uses the Dataset **`maple-bootstrap-multi-20261122`** (runtime archive built from the branch `feature/multi-resident-routing`). The original single-model Dataset `maple-bootstrap` is kept untouched as the rollback: to roll back, attach only that Dataset and set `DATASET_NAME = "maple-bootstrap"` and the old pins in the cell (commit `41d9b07`). Attach only ONE of the two Datasets in a session. The four GGUF model files are NOT in either Dataset; they need their own Dataset whose slug starts with `maple` (for example `maple-models`) or another way to place them at the exact roster paths (see RECOVERY_GUIDE.md section 2).
+
+## Fresh-session procedure with the bootstrap archive (2026-11-22)
+1. You start SSH, then Cloudflare (your own cells). 2. From Windows: `scripts\push_bootstrap.ps1` in the maple_client environment copies
+`maple-bootstrap-multi-20261122.tar.gz` to `/kaggle/working/` and verifies its SHA-256 on both sides (skip if it is already there).
+3. Run `notebooks/maple_bootstrap_cell.py` as ONE cell. It verifies the archive against `ARCHIVE_SHA256`, extracts it to `/kaggle/working/.maple_bootstrap_stage`,
+installs the pinned scripts, restores MAPLE (four resident models, GPU 0 gemma+deepseek, GPU 1 qwen3+fast, qualification-aware routing), starts the
+heartbeat/API, asks for the proxy key (hidden; or `MAPLE_API_KEY`) and runs `maple_verify_multi.py`. Safe to run again. The model GGUF files are NOT in the archive:
+they must already be at the roster paths under `/kaggle/working/models` (or be attached as a Dataset and linked); the cell never downloads them.

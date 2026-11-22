@@ -9,3 +9,6 @@
 81c54fa92e39dbc3b8df3b3d6840bfb7f95bf0c4f55f2d1e23f8fd1988c9774e *MAPLE-runtime.tar.gz
 1c1d0a3f99c95d3a27b0e5b7aef9d0fa9531bf679351803ee14e4d87f70e3b1b *MAPLE-python-deps.tar.gz
 85922584568fb08d5ef4e563dccc101fcb44a637e50705ae25308729bfc859f8 *checksums.sha256
+611d07fb221be7cbbc9013f137712199d26997edb67db706369b5982816086e3 *maple_verify_multi.py
+# Bootstrap archive (built from the files above; pinned in the cell as ARCHIVE_SHA256, NOT stored in Git):
+1a045ec49ec46cffa965f1df3418424bf9306d80dbeabee0c09fe89ad9078665 *maple-bootstrap-multi-20261122.tar.gz
