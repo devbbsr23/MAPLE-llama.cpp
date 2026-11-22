@@ -1,5 +1,5 @@
 {
-  "_comment": "JSON-compatible YAML. 'ctx' values are conservative defaults until validated by scripts/benchmark.py; do not raise them without a passing test (see manifests/models_manifest.json 'tested').",
+  "_comment": "JSON-compatible YAML. Multi-resident layout (2026-11-22). Delete the 'residency' block to restore single-model behaviour; full backup in /kaggle/working/MAPLE_backups/pre_multi_20261122. | 2026-11-22: --cache-ram 1024 per server (llama.cpp default 8192 MiB x 4 servers could exceed the 30 GiB cgroup limit). | 2026-11-22b: 'routing' block enables qualification-aware auto routing; delete it to return to keyword routing.",
   "host": "127.0.0.1",
   "api_port": 8000,
   "llama_port": 8081,
@@ -9,11 +9,233 @@
   "parallel_slots": 1,
   "flash_attn": "auto",
   "default_model": "gemma",
-  "driver_lib_dirs": ["/usr/local/nvidia/lib64"],
+  "driver_lib_dirs": [
+    "/usr/local/nvidia/lib64"
+  ],
+  "residency": {
+    "mode": "multi",
+    "preload": [
+      "qwen3",
+      "fast",
+      "gemma",
+      "deepseek"
+    ],
+    "layout": {
+      "gemma": {
+        "gpu": 0,
+        "port": 8101
+      },
+      "deepseek": {
+        "gpu": 0,
+        "port": 8102
+      },
+      "qwen3": {
+        "gpu": 1,
+        "port": 8103
+      },
+      "fast": {
+        "gpu": 1,
+        "port": 8104
+      }
+    },
+    "vram_mib": {
+      "fast": 1240,
+      "deepseek": 5950,
+      "qwen3": 5264,
+      "gemma": 5164
+    },
+    "vram_margin_mib": 1200,
+    "queue_timeout_s": 150,
+    "fail_cooldown_s": 60,
+    "fallback": {
+      "gemma": [
+        "qwen3"
+      ],
+      "qwen3": [
+        "gemma"
+      ],
+      "deepseek": [
+        "qwen3"
+      ],
+      "fast": [
+        "qwen3"
+      ]
+    }
+  },
   "models": {
-    "deepseek": {"ctx": 4096},
-    "gemma": {"ctx": 4096},
-    "qwen3": {"ctx": 4096},
-    "fast": {"ctx": 4096}
+    "gemma": {
+      "ctx": 4096,
+      "extra_args": [
+        "--reasoning",
+        "off",
+        "--cache-ram",
+        "1024"
+      ]
+    },
+    "qwen3": {
+      "ctx": 4096,
+      "extra_args": [
+        "--reasoning",
+        "off",
+        "--cache-ram",
+        "1024"
+      ]
+    },
+    "deepseek": {
+      "ctx": 4096,
+      "defaults": {
+        "temperature": 0.0,
+        "repeat_penalty": 1.05
+      },
+      "system_prompt": "You are a precise coding assistant. Reply in English only. Follow the format instructions exactly and stop when done.",
+      "extra_args": [
+        "--cache-ram",
+        "1024"
+      ]
+    },
+    "fast": {
+      "ctx": 4096,
+      "extra_args": [
+        "--cache-ram",
+        "1024"
+      ]
+    }
+  },
+  "unload_timeout_s": 30,
+  "routing": {
+    "mode": "qualified",
+    "experimental": [
+      "deepseek"
+    ],
+    "weights": {
+      "rank": 0.5,
+      "queue": 1.0,
+      "not_resident": 2.0
+    },
+    "_evidence": "Two 378-request runs on 2026-11-22; rating = worse run; n=10 per category; provisional. See maple_deliverables/B_four_model_qualification_report.md",
+    "qualification": {
+      "coding": {
+        "qualified": [
+          "qwen3"
+        ],
+        "limited": [],
+        "best_effort": [
+          "gemma",
+          "fast"
+        ],
+        "verify_required": false
+      },
+      "debugging": {
+        "qualified": [
+          "qwen3",
+          "gemma"
+        ],
+        "limited": [
+          "fast"
+        ],
+        "best_effort": [],
+        "verify_required": false
+      },
+      "test_generation": {
+        "qualified": [],
+        "limited": [],
+        "best_effort": [
+          "gemma",
+          "qwen3"
+        ],
+        "verify_required": true,
+        "_note": "no model passed (gemma 3-4/10, qwen3 2-4/10, fast 0-1/10): output is never certified; Hermes must verify or write the tests"
+      },
+      "code_review": {
+        "qualified": [
+          "gemma",
+          "qwen3"
+        ],
+        "limited": [],
+        "best_effort": [
+          "fast"
+        ],
+        "verify_required": true,
+        "_note": "gemma 10/10 twice but raised a false alarm on clean code in a demo: false-alarm rate unmeasured, so reviews need verification"
+      },
+      "architecture": {
+        "qualified": [
+          "qwen3"
+        ],
+        "limited": [
+          "gemma"
+        ],
+        "best_effort": [
+          "fast"
+        ],
+        "verify_required": false,
+        "_note": "weak keyword verifier"
+      },
+      "reasoning": {
+        "qualified": [
+          "qwen3"
+        ],
+        "limited": [],
+        "best_effort": [],
+        "verify_required": false,
+        "_note": "gemma 2/10, fast low: no fallback, a 503 is safer than a wrong answer"
+      },
+      "documentation": {
+        "qualified": [
+          "gemma",
+          "qwen3",
+          "fast"
+        ],
+        "limited": [],
+        "best_effort": [],
+        "verify_required": false
+      },
+      "long_context": {
+        "qualified": [
+          "qwen3",
+          "gemma",
+          "fast"
+        ],
+        "limited": [],
+        "best_effort": [],
+        "verify_required": false,
+        "_note": "tested only to about 3K tokens (server ctx 4096)"
+      },
+      "api_tool": {
+        "qualified": [
+          "qwen3",
+          "gemma"
+        ],
+        "limited": [
+          "fast"
+        ],
+        "best_effort": [],
+        "verify_required": false
+      },
+      "triage": {
+        "qualified": [],
+        "limited": [],
+        "best_effort": [
+          "fast",
+          "gemma",
+          "qwen3"
+        ],
+        "verify_required": true,
+        "_note": "no triage battery was run: fast is preferred for speed, but nothing is certified for this category"
+      },
+      "general": {
+        "qualified": [
+          "gemma"
+        ],
+        "limited": [
+          "qwen3"
+        ],
+        "best_effort": [
+          "fast"
+        ],
+        "verify_required": false,
+        "_note": "instruction following: gemma 8/8, qwen3 8/7, fast 5/5 of 10"
+      }
+    }
   }
 }

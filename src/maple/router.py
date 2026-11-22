@@ -65,7 +65,7 @@ class Router:
                     scores[m] += w * min(hits, 3)
         return scores
 
-    def select(self, text: str, requested: str | None = None) -> Decision:
+    def select(self, text: str, requested: str | None = None, body: dict | None = None) -> Decision:
         if requested and requested.strip().lower() not in ("auto", "maple", "maple-auto", ""):
             try:
                 mid = resolve_model_id(requested)

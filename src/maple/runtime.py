@@ -199,3 +199,196 @@ class ModelManager:
     def status(self) -> dict:
         return {"loaded": self.current, "inflight": self.inflight, "switches": self.switches,
                 "healthy": bool(self.server and self.server.healthy()), "last_load": self.last_load}
+
+
+# ---------------------------------------------------------------------------
+# PROPOSAL (not applied): several resident llama-server instances.
+# Enabled only when runtime.yaml has  "residency": {"mode": "multi", ...}.
+# Removing that key restores the single-model ModelManager above (rollback).
+# ---------------------------------------------------------------------------
+class QueueTimeout(LoadError):
+    pass
+
+
+class MultiModelManager(ModelManager):
+    """Keeps several models resident at once (one llama-server per model, one request at a time per model
+    because of -np 1). Different models serve in parallel. Placement is memory-aware: a model is loaded on its
+    preferred GPU only if free VRAM minus its measured size still leaves `vram_margin_mib`; otherwise the least
+    recently used IDLE model on that GPU is evicted; a busy model is never evicted. If nothing fits, the request
+    waits (bounded) and then fails with a clear error instead of risking a CUDA out-of-memory."""
+
+    def __init__(self, registry=None, cfg=None, log_dir=None):
+        super().__init__(registry, cfg, log_dir)
+        rc = self.cfg.get("residency") or {}
+        self.layout = rc.get("layout", {})                  # model -> {"gpu": 0|1, "port": 809x}
+        self.vram_mib = rc.get("vram_mib", {})              # measured solo VRAM per model (MiB)
+        self.margin = int(rc.get("vram_margin_mib", 1200))
+        self.queue_timeout = float(rc.get("queue_timeout_s", 120))
+        self.fail_cooldown = float(rc.get("fail_cooldown_s", 60))
+        self.servers, self.busy, self.last_used, self.failed, self.gpu_of = {}, {}, {}, {}, {}
+        self.waiting = {}                                   # model -> requests currently queued for it
+        self._wlock = threading.Lock()
+        self.closing = False
+
+    # -- helpers (all called with self.cond held) ---------------------------------------------------------
+    def _port(self, mid):
+        return int(self.layout.get(mid, {}).get("port") or (self.cfg["llama_port"] + 1 + list(self.registry.ids()).index(mid)))
+
+    def _need_mib(self, m, ctx):
+        if m["id"] in self.vram_mib:
+            return int(self.vram_mib[m["id"]])
+        return rm.plan_placement(os.path.getsize(m["model_path"]), ctx, [])["estimate_mib"]
+
+    def _prefs(self, mid, gpus):
+        want = self.layout.get(mid, {}).get("gpu")
+        want = [want] if isinstance(want, int) else list(want or [])
+        rest = [g["index"] for g in sorted(gpus, key=lambda g: -g["mem_free_mib"]) if g["index"] not in want]
+        return want + rest
+
+    def _idle_lru_on(self, gpu, exclude):
+        c = [x for x, g in self.gpu_of.items() if g == gpu and x != exclude and not self.busy.get(x)]
+        return min(c, key=lambda x: self.last_used.get(x, 0)) if c else None
+
+    def _drop(self, mid, why):
+        srv = self.servers.pop(mid, None)
+        self.gpu_of.pop(mid, None)
+        if srv:
+            log.info("stopping %s (%s)", mid, why)
+            srv.stop()
+
+    def _load_one(self, mid):
+        m = self.registry.require(mid)
+        ctx = self.ctx_for(mid)
+        need = self._need_mib(m, ctx)
+        gpus = rm.gpu_info(self.cfg)
+        if not gpus:
+            raise LoadError("no GPU information available; refusing to load '%s' blindly" % mid)
+        for gi in self._prefs(mid, gpus):
+            while True:                      # evict idle LRU models on this GPU until it fits or none are left
+                free = next(g["mem_free_mib"] for g in gpus if g["index"] == gi)
+                if free - need >= self.margin:
+                    break
+                victim = self._idle_lru_on(gi, mid)
+                if victim is None:
+                    break
+                self._drop(victim, "evicted to fit '%s' on GPU %d" % (mid, gi))
+                time.sleep(0.5)              # let the driver release memory before re-reading it
+                gpus = rm.gpu_info(self.cfg)
+            free = next(g["mem_free_mib"] for g in gpus if g["index"] == gi)
+            if free - need < self.margin:
+                continue
+            placement = {"devices": [gi], "split_mode": "none", "estimate_mib": need,
+                         "reason": "resident layout: %d MiB free on GPU %d, need %d + margin %d" % (free, gi, need, self.margin)}
+            srv = LlamaServer(m, dict(self.cfg, llama_port=self._port(mid)), placement, ctx, self.log_dir)
+            info = srv.start()
+            self.servers[mid], self.gpu_of[mid] = srv, gi
+            self.switches += 1
+            self.last_load = {"model": mid, "ctx": ctx, "placement": placement, **info}
+            return
+        raise LoadError("insufficient VRAM for '%s' (needs %d MiB + %d MiB margin; all GPUs hold busy models). "
+                        "Try again later." % (mid, need, self.margin))
+
+    # -- public API (same contract as ModelManager) -------------------------------------------------------
+    @contextmanager
+    def use(self, model_id: str, ctx: int | None = None):
+        mid = self.registry.get(model_id)["id"]
+        deadline = time.time() + self.queue_timeout
+        with self._wlock:
+            self.waiting[mid] = self.waiting.get(mid, 0) + 1
+        counted = [True]
+
+        def _dequeue():
+            if counted[0]:
+                counted[0] = False
+                with self._wlock:
+                    self.waiting[mid] = max(0, self.waiting.get(mid, 1) - 1)
+        try:
+            yield from self._use_locked(mid, deadline, _dequeue)
+        finally:
+            _dequeue()
+
+    def _use_locked(self, mid, deadline, _dequeue):
+        with self.cond:
+            while True:
+                if time.time() > deadline:
+                    raise QueueTimeout("timed out after %.0fs waiting for model '%s'" % (self.queue_timeout, mid))
+                srv = self.servers.get(mid)
+                if srv and not srv.healthy() and not self.busy.get(mid):
+                    log.warning("resident model %s unhealthy; reloading", mid)
+                    self._drop(mid, "unhealthy")
+                    srv = None
+                if srv and not self.busy.get(mid):
+                    self.busy[mid] = True
+                    _dequeue()
+                    break
+                if not srv:
+                    failed = self.failed.get(mid)
+                    if failed and time.time() - failed[0] < self.fail_cooldown:
+                        raise LoadError("model '%s' failed to load recently (%s); retry after cooldown" % (mid, failed[1][:200]))
+                    try:
+                        self._load_one(mid)
+                        self.failed.pop(mid, None)
+                        deadline = max(deadline, time.time() + 10)   # a slow (but successful) load must not eat the queue budget
+                        continue
+                    except LoadError as e:
+                        if "insufficient VRAM" not in str(e):
+                            self.failed[mid] = (time.time(), str(e))
+                            raise
+                left = deadline - time.time()
+                if left <= 0:
+                    raise QueueTimeout("timed out after %.0fs waiting for model '%s'" % (self.queue_timeout, mid))
+                self.cond.wait(timeout=min(left, 2.0))
+            self.inflight += 1
+            self.last_used[mid] = time.time()
+        try:
+            yield "http://%s:%d" % (self.cfg["host"], self._port(mid))
+        finally:
+            with self.cond:
+                self.busy[mid] = False
+                self.inflight -= 1
+                self.last_used[mid] = time.time()
+                self.cond.notify_all()
+
+    def snapshot(self) -> dict:
+        """Cheap routing view (no lock, no health probes): resident models with busy/queue state and models that
+        are cooling down after a failed load."""
+        now = time.time()
+        res = {}
+        for m, s in list(self.servers.items()):
+            p = getattr(s, "proc", False)
+            if p is False or (p is not None and p.poll() is None):     # p False: server object without a process handle
+                res[m] = {"gpu": self.gpu_of.get(m), "busy": bool(self.busy.get(m)), "waiting": self.waiting.get(m, 0)}
+        failed = {m: round(self.fail_cooldown - (now - t), 1) for m, (t, _) in list(self.failed.items()) if now - t < self.fail_cooldown}
+        return {"resident": res, "failed": failed, "waiting": dict(self.waiting)}
+
+    def preload(self, ids):
+        with self.cond:
+            for mid in ids or []:
+                if self.closing:
+                    return
+                if mid not in self.servers:
+                    try:
+                        self._load_one(self.registry.get(mid)["id"])
+                    except Exception as e:  # noqa - preload is best effort
+                        log.error("preload of %s failed: %s", mid, e)
+
+    def unload(self):
+        self.closing = True
+        with self.cond:
+            while self.inflight:
+                self.cond.wait()
+            for mid in list(self.servers):
+                self._drop(mid, "shutdown")
+
+    def status(self) -> dict:
+        res = {m: {"gpu": self.gpu_of.get(m), "port": self._port(m), "busy": bool(self.busy.get(m)),
+                   "healthy": s.healthy()} for m, s in self.servers.items()}
+        last = max(self.last_used, key=self.last_used.get) if self.last_used else None
+        return {"loaded": last, "inflight": self.inflight, "switches": self.switches,
+                "healthy": any(v["healthy"] for v in res.values()), "resident": res, "last_load": self.last_load}
+
+
+def make_manager(registry, cfg):
+    if (cfg.get("residency") or {}).get("mode") == "multi":
+        return MultiModelManager(registry, cfg)
+    return ModelManager(registry, cfg)

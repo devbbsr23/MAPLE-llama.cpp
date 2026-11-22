@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased: multi-resident models and qualification-aware routing (branch `feature/multi-resident-routing`)
+
+* Four models resident at once, pinned to GPUs by `residency.layout`; memory-aware loading, busy models never evicted, controlled load failures with cooldown, per-model queues.
+* Qualification-aware automatic routing (`routing` block, `src/maple/qualified_routing.py`): task classification, tiered qualification table, residency/queue/failure aware, deepseek experimental, `maple.require_certified`, certification headers.
+* `--cache-ram 1024` per server (llama.cpp default 8192 MiB x 4 could exceed the container limit).
+* New: `config/runtime.single_model.yaml` (original configuration kept for rollback), `docs/MULTI_MODEL.md`, `tests/test_multi_resident.py`.
+* Without `residency` / `routing` blocks MAPLE behaves exactly as 0.1.0.
+
 ## 0.1.0 (unreleased)
 
 First public version of MAPLE-llama.cpp.

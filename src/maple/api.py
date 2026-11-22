@@ -8,6 +8,7 @@ import http.client
 import json
 import logging
 import signal
+import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -15,8 +16,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from . import resource_manager as rm
 from .config import MODEL_ROSTER, load_runtime_config, maple_home
 from .registry import ModelMissing, Registry
-from .router import Router, last_user_text
-from .runtime import LoadError, ModelManager
+from .qualified_routing import NoQualifiedModel, NoSuitableModel, make_router
+from .router import Decision, Router, last_user_text
+from .runtime import LoadError, ModelManager, make_manager
 
 log = logging.getLogger("maple.api")
 
@@ -37,9 +39,35 @@ class App:
     def __init__(self, registry=None, manager=None, router=None, cfg=None):
         self.cfg = cfg or load_runtime_config()
         self.registry = registry or Registry()
-        self.manager = manager or ModelManager(self.registry, self.cfg)
-        self.router = router or Router(default=self.cfg.get("default_model", "gemma"))
+        self.manager = manager or make_manager(self.registry, self.cfg)
+        self.router = router or make_router(self.cfg, MODEL_ROSTER, self.manager)
         self.started = time.time()
+
+
+def fallback_chain(dec, body, cfg):
+    """Models to try, in order. An EXPLICIT model choice is never silently replaced unless the caller opts in
+    with {"x_maple_allow_fallback": true}; 'auto' routing may fall back along residency.fallback."""
+    chain = [dec.model]
+    if dec.explicit and not body.get("x_maple_allow_fallback"):
+        return chain
+    fb = (cfg.get("residency") or {}).get("fallback", {}).get(dec.model, [])
+    return chain + [x for x in fb if x in MODEL_ROSTER and x not in chain]
+
+
+def prepare_body(body, mid, cfg, path):
+    """Per-model defaults (config 'models.<id>.defaults', e.g. temperature/repeat_penalty) and optional default
+    system prompt (config 'models.<id>.system_prompt'), applied only where the caller gave none."""
+    m, mc = MODEL_ROSTER[mid], (cfg.get("models") or {}).get(mid, {})
+    b = {k: v for k, v in body.items() if k not in ("x_maple_allow_fallback", "maple")}
+    b["model"] = mid
+    b.setdefault("temperature", m["temperature"])
+    b.setdefault("max_tokens", m["max_tokens"])
+    for k, v in (mc.get("defaults") or {}).items():
+        b.setdefault(k, v)
+    sp = mc.get("system_prompt")
+    if sp and path == "/v1/chat/completions" and not any(x.get("role") == "system" for x in b.get("messages", [])):
+        b["messages"] = [{"role": "system", "content": sp}] + list(b["messages"])
+    return b
 
 
 def _err(status, msg, etype="invalid_request_error", code=None):
@@ -93,7 +121,7 @@ def make_handler(app: App):
             ok = all(c["status"] == "ok" for c in checks)
             out = {"status": "ok" if ok else "degraded", "uptime_s": round(time.time() - app.started),
                    "models": {c["id"]: c["status"] for c in checks}, "model_paths_ok": ok,
-                   "runtime": {k: st[k] for k in ("loaded", "inflight", "switches", "healthy")}}
+                   "runtime": {k: st[k] for k in ("loaded", "inflight", "switches", "healthy", "resident") if k in st}}
             if not ok:
                 out["missing"] = [{"id": c["id"], "path": c["path"], "status": c["status"]} for c in checks if c["status"] != "ok"]
             if deep:
@@ -111,8 +139,11 @@ def make_handler(app: App):
             path = self.path.split("?")[0]
             try:
                 if path == "/v1/route":
-                    d = app.router.select(last_user_text(body.get("messages")) or str(body.get("prompt", "")), body.get("model"))
-                    return self._send(200, {"model": d.model, "reason": d.reason, "scores": d.scores, "explicit": d.explicit})
+                    d = app.router.select(last_user_text(body.get("messages")) or str(body.get("prompt", "")), body.get("model"), body=body)
+                    out = {"model": d.model, "reason": d.reason, "scores": d.scores, "explicit": d.explicit}
+                    if hasattr(d, "public"):
+                        out["qualification"] = d.public()
+                    return self._send(200, out)
                 if path not in ("/v1/chat/completions", "/v1/completions"):
                     return self._send(*_err(404, "not found: %s" % path, "not_found", "not_found"))
                 if path == "/v1/chat/completions":
@@ -124,15 +155,29 @@ def make_handler(app: App):
                         return self._send(*_err(400, "'prompt' is required"))
                     text = body["prompt"] if isinstance(body["prompt"], str) else " ".join(map(str, body["prompt"]))
                 try:
-                    dec = app.router.select(text, body.get("model"))
+                    dec = app.router.select(text, body.get("model"), body=body)
                 except KeyError as e:
                     return self._send(*_err(404, e.args[0], "model_not_found", "model_not_found"))
-                m = MODEL_ROSTER[dec.model]
-                body = dict(body)
-                body["model"] = dec.model
-                body.setdefault("temperature", m["temperature"])
-                body.setdefault("max_tokens", m["max_tokens"])
-                self.proxy(path, body, dec, m, t0)
+                except NoQualifiedModel as e:
+                    return self._send(*_err(409, str(e), "no_qualified_model", "no_qualified_model"))
+                except NoSuitableModel as e:
+                    return self._send(*_err(503, str(e), "no_suitable_model", "no_suitable_model"))
+                last = None
+                if hasattr(dec, "chain_decisions") and dec.chain and not dec.explicit:
+                    attempts = dec.chain_decisions()          # qualification-aware chain (qualified > limited > best effort)
+                else:
+                    attempts = [dec if n == 0 else Decision(mid, "fallback from %s" % dec.model, {}, False)
+                                for n, mid in enumerate(fallback_chain(dec, body, app.cfg))]
+                for n, d in enumerate(attempts):
+                    mid = d.model
+                    if n and last is not None and not hasattr(d, "chain_decisions"):
+                        d.reason = "fallback from %s (%s)" % (dec.model, str(last)[:120])
+                    try:
+                        return self.proxy(path, prepare_body(body, mid, app.cfg, path), d, MODEL_ROSTER[mid], t0)
+                    except (ModelMissing, LoadError) as e:   # raised before any response byte was sent
+                        last = e
+                        log.warning("model %s unavailable: %s", mid, e)
+                raise last
             except ModelMissing as e:
                 log.error("model missing: %s", e)
                 self._send(*_err(503, str(e), "model_unavailable", "model_missing"))
@@ -148,6 +193,8 @@ def make_handler(app: App):
         def proxy(self, path, body, dec, m, t0):
             stream = bool(body.get("stream"))
             hdr = {"X-MAPLE-Model": dec.model, "X-MAPLE-Route": dec.reason}
+            if hasattr(dec, "headers"):
+                hdr.update(dec.headers())
             with app.manager.use(dec.model) as base:
                 host, port = base.replace("http://", "").split(":")
                 conn = http.client.HTTPConnection(host, int(port), timeout=600)
@@ -174,6 +221,8 @@ def make_handler(app: App):
                     if r.status == 200 and isinstance(obj, dict):
                         obj["x_maple"] = {"model": dec.model, "route": dec.reason, "explicit": dec.explicit,
                                           "latency_s": round(time.time() - t0, 3)}
+                        if hasattr(dec, "public"):
+                            obj["x_maple"]["qualification"] = dec.public()
                     self._send(r.status, obj, hdr)
                 conn.close()
             log.info("%s -> %s (%s) %.2fs", path, dec.model, dec.reason, time.time() - t0)
@@ -193,6 +242,9 @@ def serve(host=None, port=None, app: App | None = None):
     def _term(signum, frame):          # SIGTERM must unload the model too, or llama-server is orphaned on the GPU
         raise KeyboardInterrupt
     signal.signal(signal.SIGTERM, _term)
+    pre = (app.cfg.get("residency") or {}).get("preload", [])
+    if pre and hasattr(app.manager, "preload"):    # warm the resident set in the background; the API is already answering
+        threading.Thread(target=app.manager.preload, args=(pre,), name="maple-preload", daemon=True).start()
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
