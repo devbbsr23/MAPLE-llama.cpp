@@ -1,4 +1,4 @@
-# BOOTSTRAP_MANIFEST.sha256 - the files that belong in the private Kaggle Dataset 'maple-bootstrap' (no models, no keys).
+# BOOTSTRAP_MANIFEST.sha256 - the files that belong in the private Kaggle Dataset 'maple-bootstrap-multi-20261122' (no models, no keys).
 # The same values are pinned inside notebooks/maple_bootstrap_cell.py; the cell rejects any file that does not match.
 # Scripts can also be fetched from GitHub; archives only from the Dataset or /kaggle/working. Every source is hash-checked the same way.
 # Archives are NOT in Git (see .gitignore); their hashes equal checksums.sha256 shipped with them. Verify: sha256sum -c BOOTSTRAP_MANIFEST.sha256

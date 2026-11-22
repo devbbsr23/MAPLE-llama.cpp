@@ -11,7 +11,8 @@ import glob, hashlib, os, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 # ----------------------------------- CONFIGURATION (normally no edit needed) -----------------------------------
-DATASET_NAME      = "maple-bootstrap"      # slug of YOUR Kaggle Dataset holding the files below (used only if a file is missing)
+DATASET_NAME      = "maple-bootstrap-multi-20261122"   # slug of YOUR Kaggle Dataset holding the files below (used only if a file is missing).
+                                                  # The original single-model Dataset is "maple-bootstrap" (rollback; set this name back to use it, with the old pins).
 GITHUB_COMMIT     = "e2be404016c3a0c66f79af1984d826c67f9d80d2"   # commit that already contains maple_heartbeat.py / maple_tunnel.py (tried first for those two)
 INSTALL_DIR       = "/kaggle/working/MAPLE_compatible"
 ARTIFACT_DIR      = "/kaggle/working/maple_artifacts_flat"

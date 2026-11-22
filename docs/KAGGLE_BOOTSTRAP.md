@@ -22,11 +22,11 @@ Evidence labels follow the operating guide ([MAPLE_COMPLETE_OPERATING_GUIDE.md](
 | **Observed** (an earlier session) | A snapshot had stripped the execute permission bits from the `llama-server` build; the restore script repaired them. | **[LIVE-VERIFIED]** |
 | **Not guaranteed** | That `/kaggle/working` is kept in any other session. It depends on how Kaggle saved that notebook and on Kaggle's own behaviour, which this project does not control. The repository README states the opposite default (it does not survive a restart). | Treat as a convenience, never as a dependency. |
 | **Not persistent** | `/tmp`, running processes, lock files, and the Cloudflare tunnel (every new session gets a new host name). | Kaggle sessions are ephemeral. |
-| **What this procedure depends on** | The private Dataset `maple-bootstrap` (stored by Kaggle until you delete it) and the public repository. | Attaching the Dataset in a *fresh* session has **not** been tested here **[UNVERIFIED]**; the same logic was tested with a local folder standing in for it **[UNIT-TESTED]**. |
+| **What this procedure depends on** | The private Dataset `maple-bootstrap-multi-20261122` (stored by Kaggle until you delete it) and the public repository. | Attaching the Dataset in a *fresh* session has **not** been tested here **[UNVERIFIED]**; the same logic was tested with a local folder standing in for it **[UNIT-TESTED]**. |
 
 So the design assumes `/kaggle/working` may be completely empty: the one-click script, both supervisor scripts and the restore archives are all recoverable from the Dataset alone. Only the four models are outside it (section 7).
 
-## 3. One-time setup: the private `maple-bootstrap` Dataset
+## 3. One-time setup: the private `maple-bootstrap-multi-20261122` Dataset
 
 Do this once, on the Kaggle website (it needs your own login; nothing here uses or stores credentials).
 
@@ -34,13 +34,13 @@ Do this once, on the Kaggle website (it needs your own login; nothing here uses 
    - `maple_oneclick_restore.py`, `maple_heartbeat.py`, `maple_tunnel.py` (from `supervisor/`)
    - `MAPLE-llamacpp-cuda.tar.gz`, `MAPLE-runtime.tar.gz`, `MAPLE-python-deps.tar.gz`, `checksums.sha256` (release assets, see [RESTORATION.md](RESTORATION.md))
 2. Verify them before upload: `sha256sum -c BOOTSTRAP_MANIFEST.sha256` (Linux/Git Bash), or compare with `Get-FileHash -Algorithm SHA256` in PowerShell.
-3. Kaggle > Datasets > New Dataset. Select the files, name it **`maple-bootstrap`** (the URL slug must be exactly that), set it **Private**, create it.
+3. Kaggle > Datasets > New Dataset. Select the files, name it **`maple-bootstrap-multi-20261122`** (the URL slug must be exactly that), set it **Private**, create it.
 4. **Never put model files, API keys, SSH keys, tokens or Kaggle credentials in this Dataset.** Models stay where they are (section 7).
 
 ## 4. Every new session
 
 1. Settings > Accelerator > **GPU T4 x2**.
-2. Input panel > Add Input > Your Datasets > `maple-bootstrap`. (Not required while `/kaggle/working` still has the files, but required for a truly empty session.)
+2. Input panel > Add Input > Your Datasets > `maple-bootstrap-multi-20261122`. (Not required while `/kaggle/working` still has the files, but required for a truly empty session.)
 3. Paste the contents of `notebooks/maple_bootstrap_cell.py` into one cell and run it.
 
 Options (edit the `RUN_ARGS` line in the cell): `["--check-only"]` changes nothing and starts nothing; `["--sha"]` also recomputes the model hashes (reads about 16 GB, several minutes); `["--force-restore"]` re-runs `restore_kaggle.py`.
@@ -68,7 +68,7 @@ Nothing is compiled, no model is downloaded, no authentication proxy, SSH or Clo
 
 | Report | Meaning and fix |
 |---|---|
-| `MISSING ... no verified copy` | The file is not in `/kaggle/working`, not in an attached `maple*` Dataset, and (for scripts) GitHub did not deliver a matching copy. Attach `maple-bootstrap` and run the cell again. |
+| `MISSING ... no verified copy` | The file is not in `/kaggle/working`, not in an attached `maple*` Dataset, and (for scripts) GitHub did not deliver a matching copy. Attach `maple-bootstrap-multi-20261122` and run the cell again. |
 | `REJECTED ... SHA256/size mismatch` | A source file differs from the pinned version. It was not written. Re-upload the staged file; never edit the pinned hash to make it pass unless you changed the file on purpose. |
 | `KEPT ... YOUR file was left untouched` | You modified an installed file. Fine for running; update the pin in the cell if you want it to count as verified. |
 | Stage 4 `FAILED` | A required directory or script is missing; the message names it. |
@@ -113,7 +113,11 @@ If you change a script, recompute its SHA256, then update three places together:
 
 ## 12. Known limitations
 
-- One shared Dataset slug; the cell looks for `maple-bootstrap` only.
+- One shared Dataset slug; the cell looks for `maple-bootstrap-multi-20261122` only.
 - The cell trusts the hashes pinned inside itself. Verify the cell itself (its SHA256 is not self-checked).
 - Time: about 1 s when everything is already running (measured). A cold start of the API is estimated at 1-3 minutes (not measured end to end).
 - The older `notebooks/MAPLE_Kaggle_Restore.ipynb` flow does not start the heartbeat and remains available.
+
+
+## Multi-model Dataset (2026-11-22)
+The multi-model release uses the Dataset **`maple-bootstrap-multi-20261122`** (runtime archive built from the branch `feature/multi-resident-routing`). The original single-model Dataset `maple-bootstrap` is kept untouched as the rollback: to roll back, attach only that Dataset and set `DATASET_NAME = "maple-bootstrap"` and the old pins in the cell (commit `41d9b07`). Attach only ONE of the two Datasets in a session. The four GGUF model files are NOT in either Dataset; they need their own Dataset whose slug starts with `maple` (for example `maple-models`) or another way to place them at the exact roster paths (see RECOVERY_GUIDE.md section 2).
