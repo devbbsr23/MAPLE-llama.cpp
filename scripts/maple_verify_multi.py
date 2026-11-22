@@ -40,20 +40,23 @@ def sha(p):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--maple-home", default="/kaggle/working/MAPLE-llama.cpp"); ap.add_argument("--api", default="http://127.0.0.1:8000")
-    ap.add_argument("--proxy", default="http://127.0.0.1:8088"); ap.add_argument("--sha", action="store_true"); ap.add_argument("--no-smoke", action="store_true"); ap.add_argument("--json", action="store_true")
+    ap.add_argument("--proxy", default="http://127.0.0.1:8088"); ap.add_argument("--sha", action="store_true"); ap.add_argument("--no-smoke", action="store_true"); ap.add_argument("--json", action="store_true"); ap.add_argument("--models-only", action="store_true", help="check ONLY the four model files (use before starting servers)"); ap.add_argument("--manifest", default=None, help="models_manifest.json to use instead of <maple-home>/manifests/")
     a = ap.parse_args(); H = a.maple_home
     print("=" * 78 + "\nMAPLE MULTI-MODEL VERIFICATION (read-only)\n" + "=" * 78)
     # config
     try:
+        if a.models_only: raise KeyError("skipped")
         cfg = json.load(open(os.path.join(H, "config/runtime.yaml"), encoding="utf-8"))   # runtime.yaml is JSON-compatible YAML
         layout = (cfg.get("residency") or {}).get("layout") or {}
         rec(set(layout) == set(EXPECT_MODELS) and (cfg.get("residency") or {}).get("mode") not in (None, "off"), "config: residency layout", json.dumps({k: v["gpu"] for k, v in layout.items()}))
         routing_on = (cfg.get("routing") or {}).get("mode") == "qualified"; rec(routing_on, "config: qualified routing enabled", str((cfg.get("routing") or {}).get("mode")))
     except Exception as e:
-        rec(False, "config: runtime.yaml", "%s: %s" % (type(e).__name__, e)); layout = {}
+        layout = {}
+        if not isinstance(e, KeyError): rec(False, "config: runtime.yaml", "%s: %s" % (type(e).__name__, e))
     # 1 models
+    if a.models_only: RES.clear()   # config checks are not part of the pre-start model check
     try:
-        man = json.load(open(os.path.join(H, "manifests/models_manifest.json"), encoding="utf-8"))["models"]
+        man = json.load(open(a.manifest or os.path.join(H, "manifests/models_manifest.json"), encoding="utf-8"))["models"]
     except Exception as e:
         man = {}; rec(False, "models manifest", "%s" % type(e).__name__)
     for mid in EXPECT_MODELS:
@@ -67,6 +70,11 @@ def main():
         if a.sha and ok:
             t = time.time(); h = sha(p); ok = h == m.get("sha256"); det += " | sha256 %s (%.0fs)" % ("OK" if ok else "MISMATCH", time.time() - t)
         rec(ok, "model file %s" % mid, det)
+    if a.models_only:
+        bad = [r for r in RES if r[0] == "FAIL"]
+        print("-" * 78 + "\nMODEL FILES: %s  (%d of %d pass)" % ("PASS" if not bad else "FAIL", sum(r[0] == "PASS" for r in RES), len(EXPECT_MODELS)))
+        for r in bad: print("  FAILED:", r[1], "-", r[2])
+        return 0 if not bad else 1
     # 2 processes
     ps = sh("ps -eo pid,args")
     cnt = {mid: len(re.findall(r"llama-server.*--alias %s(\s|$)" % mid, ps)) for mid in EXPECT_MODELS}

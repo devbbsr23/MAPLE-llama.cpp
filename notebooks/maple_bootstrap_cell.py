@@ -17,8 +17,8 @@ DATASET_NAME      = "maple-bootstrap-multi-20261122"   # slug of YOUR Kaggle Dat
                                                   # The original single-model Dataset is "maple-bootstrap" (rollback; set this name back to use it, with the old pins).
 GITHUB_COMMIT     = "e2be404016c3a0c66f79af1984d826c67f9d80d2"   # commit that already contains maple_heartbeat.py / maple_tunnel.py (tried first for those two)
 ARCHIVE_NAME      = "maple-bootstrap-multi-20261122.tar.gz"   # the bootstrap archive (no models, no keys); its SHA-256 and size are pinned here
-ARCHIVE_SHA256    = "1a045ec49ec46cffa965f1df3418424bf9306d80dbeabee0c09fe89ad9078665"
-ARCHIVE_SIZE      = 60832545
+ARCHIVE_SHA256    = "f987d325e771d97e7050a4ab1dd8b1a8c0f53f07d5453795ccb5a309dc970adf"
+ARCHIVE_SIZE      = 60832616
 STAGE_DIR         = "/kaggle/working/.maple_bootstrap_stage"   # where the verified archive is extracted (owned by this cell; re-created if it does not match)
 INSTALL_DIR       = "/kaggle/working/MAPLE_compatible"
 ARTIFACT_DIR      = "/kaggle/working/maple_artifacts_flat"
@@ -31,7 +31,7 @@ RUN_AFTER_INSTALL = True
 # maple_tunnel.py accepts 3 versions on purpose: the current repository copy, the copy at the pinned GitHub commit, and the older copy already deployed on Kaggle.
 FILES = [
  ('maple_oneclick_restore.py', 'install', ('25afb7ca823d659474b7aa56a8e786800f06eb0582535d55e30710041438b0c3',), 34883, 'supervisor/maple_oneclick_restore.py', 'required'),
- ('maple_verify_multi.py', 'install', ('611d07fb221be7cbbc9013f137712199d26997edb67db706369b5982816086e3',), 9889, None, 'required'),
+ ('maple_verify_multi.py', 'install', ('7e69dacb8cd8140bb4cf328766b6f0a42a92716826986cc7e46b9d4eb609bc73',), 10644, None, 'required'),
  ('maple_heartbeat.py', 'install', ('8af6007bba5d6970567e4b9e33f0b8018cf616c2188e2e5b8073c6fcf532061d',), 53241, 'supervisor/maple_heartbeat.py', 'required'),
  ('maple_tunnel.py', 'install', ('1a14583571b3d67d137cdc2e18d90c82c1debf0efeca08e962fa8af707cfd99f', '42f17d0985eed27a95bce29806641b4f55a42ae25ecad91c302cd2be1841fe80', 'b255bce5d806124bf646487a51b325cf53b7f98bf72d41fd19282755cbfe3a75'), (62747, 62699), 'supervisor/maple_tunnel.py', 'optional'),
  ('MAPLE-llamacpp-cuda.tar.gz', 'artifact', ('0be6e25deedb37c2ab01fd53c761a7efcacddd3ff37d6713e4787bd9062a1b49',), 60260524, None, 'artifact'),
@@ -181,6 +181,25 @@ if failed:
     print("Fix: put %s in /kaggle/working (from Windows: scripts\\push_bootstrap.ps1, over your SSH forward) or attach Dataset '%s', then run this cell again;" % (ARCHIVE_NAME, DATASET_NAME))
     print("     the Dataset must contain: " + ", ".join(f[0] for f in FILES) + ". Nothing was changed or started.")
     sys.exit(2)
+
+# ---------------------------------------- persistent model files: verify BEFORE anything is started (read-only; never downloads or copies) ----------------------------------------
+VERIFY_MODEL_SHA = True      # all four GGUF files are hashed against the manifest pinned inside the verified MAPLE-runtime.tar.gz (about 1-3 minutes on a cold disk)
+if RUN_AFTER_INSTALL and VERIFY_MODEL_SHA:
+    print("\n" + "=" * 78 + "\nPERSISTENT MODEL FILES (/kaggle/working/models): size, GGUF header and SHA-256 vs the pinned manifest\n" + "=" * 78, flush=True)
+    _mf = Path(INSTALL_DIR, "models_manifest.pinned.json")
+    try:
+        with tarfile.open(Path(ARTIFACT_DIR, "MAPLE-runtime.tar.gz")) as _t:
+            _m = [m for m in _t.getmembers() if m.isfile() and m.name.endswith("manifests/models_manifest.json")]
+            _mf.write_bytes(_t.extractfile(_m[0]).read())
+    except Exception as _e:
+        print("FAILED: cannot read the pinned model manifest from MAPLE-runtime.tar.gz (%s). Nothing was started." % type(_e).__name__); sys.exit(3)
+    _pm = subprocess.run(["python3", "-I", str(Path(INSTALL_DIR, "maple_verify_multi.py")), "--models-only", "--sha", "--manifest", str(_mf)], capture_output=True, text=True)
+    print(_pm.stdout.rstrip())
+    if _pm.returncode != 0:
+        print("\nFAILED: the four model files are not all present and intact at their roster paths under /kaggle/working/models.\n"
+              "  Missing: Kaggle did not restore the working directory (or the files were deleted). Corrupt: the SHA-256 differs from the manifest.\n"
+              "  MAPLE never downloads or replaces models. Nothing was started. Restore the exact files to the paths above, then run this cell again.")
+        sys.exit(3)
 
 script = Path(INSTALL_DIR, "maple_oneclick_restore.py")
 if not RUN_AFTER_INSTALL:
