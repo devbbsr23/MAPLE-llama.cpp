@@ -6,7 +6,8 @@
 # What it does: finds the MAPLE scripts/archives (the bootstrap archive below, else already in /kaggle/working, else your Dataset, else GitHub), checks SHA256
 # against the manifest pinned BELOW before anything is written or run, never overwrites an existing file, never downloads
 # models, then runs maple_oneclick_restore.py (restore if needed -> models -> heartbeat -> MAPLE API -> /health, /v1/models).
-# It never starts the authentication proxy and never touches SSH/Cloudflare. No credentials are used or printed.
+# It starts the authentication proxy only with a key you type hidden (or MAPLE_API_KEY), checks all four model hashes before starting anything,
+# and never touches SSH/Cloudflare. No credentials are stored, printed or included in the archive.
 # Documentation: docs/KAGGLE_BOOTSTRAP.md   |   Pinned hashes below: notebooks/BOOTSTRAP_MANIFEST.sha256
 # =====================================================================================================
 import getpass, glob, hashlib, os, shutil, socket, subprocess, sys, tarfile, time, urllib.request
