@@ -18,7 +18,13 @@ from .router import Decision, Router
 # (regex, weight). score(category) = sum(weight * min(hits, 2)); highest wins if >= MIN_SCORE.
 _RULES = {
     "test_generation": [
-        (r"\b(write|generate|create|add|produce|draft|give me)\b[^.\n]{0,50}\b(unit |integration |regression |pytest )?tests?\b", 6),
+        # explicit requests to PRODUCE tests dominate: no model is certified for this category, so it must never be
+        # mislabelled as coding/debugging just because the prompt also contains code
+        (r"\b(write|generate|create|add|produce|draft|give me|need|make|build)\b[^.\n]{0,50}\b(unit|integration|regression|pytest|jest|junit|e2e|end-to-end|api)[- ]?tests?\b", 12),
+        (r"\b(write|generate|create|add|produce|draft|give me|need)\b[^.\n]{0,30}\btests? (for|covering|to cover|that cover|which cover)\b", 12),
+        (r"\b(write|generate|create|add|produce|draft)\b[^.\n]{0,30}\btest (cases?|suite|plan)\b", 12),
+        (r"\b(write|generate|create|produce|draft)\b[^.\n]{0,30}\btest (code|files?|modules?|functions?)\b", 12),
+        (r"\b(write|generate|create|add|produce|draft|give me)\b[^.\n]{0,50}\btests?\b(?!\s+(whether|if)\b)", 6),
         (r"\btest (cases?|suite|plan|coverage)\b", 5), (r"\b(pytest|unittest|jest|junit)\b", 4),
         (r"\bassert statements?\b", 4)],
     "code_review": [

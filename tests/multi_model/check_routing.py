@@ -61,6 +61,13 @@ check("documentation chain is gemma, qwen3, fast all qualified", [x.model for x 
 d = sel("Write a Python function that merges two sorted lists."); ch = d.chain_decisions()
 check("coding chain: qwen3 certified, then uncertified fallbacks", [x.model for x in ch][:1] == ["qwen3"] and not ch[1].certified and ch[1].verify_required)
 d = sel("Triage this ticket in one line: login page returns 500."); check("explicit triage request -> fast, uncertified, verify required", d.model == "fast" and not d.certified and d.verify_required)
+# adversarial test-generation phrasings (inline code, no fences, many verbs): never certified, never mislabelled
+ADV_TG = ['Write unit tests for this function: def add(a,b): return a+b', "Generate pytest tests for the following function: def slugify(s): return s.lower().replace(' ','-')", 'Can you create unit tests for class Stack with push and pop? class Stack: pass', 'I need tests for my parse_config function. def parse_config(path): return open(path).read()', 'Add test cases covering empty input, None and very large lists for def dedupe(xs): return list(set(xs))', 'Write a test suite for the shopping cart module.', 'Produce jest tests for this React component: function Button(props) { return null }', 'Please draft regression tests for the bug we fixed in parse_date().', 'Write tests that cover the edge cases of binary_search(arr, x).', 'Give me JUnit tests for class Account { void deposit(int n) {} }', 'Generate integration tests for the /orders endpoint of our API.', 'write unit tests']
+bad = [t for t in ADV_TG if not (lambda d: d.category == "test_generation" and not d.certified and d.verify_required)(sel(t))]
+check("all 12 explicit test-generation requests -> test_generation, uncertified, verify required %s" % (bad[:2] or ""), not bad)
+check("docstring request mentioning 'tests whether' stays documentation", sel("Add a docstring to the function that tests whether a user is a member of a group.").category == "documentation")
+check("fixing a failing test stays debugging", sel("Fix the failing test in test_cart.py; it raises KeyError when the cart is empty.").category == "debugging")
+check("implement a function stays coding (certified)", (lambda d: d.category == "coding" and d.certified)(sel("Implement a function is_prime(n) in Python.")))
 # disabled -> plain router
 cfg2 = dict(CFG); cfg2["routing"] = {}
 check("no routing block -> original keyword Router", type(make_router(cfg2, MODEL_ROSTER, fm)) is Router)
