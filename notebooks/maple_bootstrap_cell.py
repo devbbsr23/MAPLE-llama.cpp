@@ -87,8 +87,22 @@ def ensure(name, where, ok_hashes, size, ghpath, notes):
     if dest.is_file():
         if sha_file(dest) in ok_hashes:
             return "OK", "present, SHA256 verified"
-        return "KEPT", "present but differs from the pinned version: YOUR file was left untouched (not overwritten)"
-    data, origin = fetch(name, ok_hashes, size, ghpath, notes)
+        # Present but different (typically left over from an earlier session). Replace it ONLY if a verified pinned copy is available;
+        # the old file is moved (never deleted) to MAPLE_backups/stale_before_bootstrap_<date>/ so nothing is lost.
+        data, origin = fetch(name, ok_hashes, size, ghpath, notes)
+        if data is None:
+            return "KEPT", "present but differs from the pinned version and no verified pinned copy is available: left untouched"
+        bk = Path("/kaggle/working/MAPLE_backups/stale_before_bootstrap_" + time.strftime("%Y%m%d"))
+        bk.mkdir(parents=True, exist_ok=True)
+        old = bk / (name + ".old")
+        if old.exists():
+            old = bk / ("%s.old.%d" % (name, int(time.time())))
+        shutil.move(str(dest), str(old))
+        notes.append("%s: stale copy moved to %s" % (name, old))
+        stale_note = " (replaced a stale copy; old one kept in %s)" % bk
+    else:
+        stale_note = ""
+        data, origin = fetch(name, ok_hashes, size, ghpath, notes)
     if data is None:
         return "MISSING", "no verified copy: not in /kaggle/working, and no source matched the pinned SHA256 (Dataset '%s'%s); see notes below" % (DATASET_NAME, ", GitHub" if ghpath else "; this file is not on GitHub")
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +115,7 @@ def ensure(name, where, ok_hashes, size, ghpath, notes):
     finally:
         tmp.unlink()
     os.chmod(dest, 0o644)
-    return "OK", "installed from %s after SHA256 check (%d bytes)" % (origin, len(data))
+    return "OK", "installed from %s after SHA256 check (%d bytes)%s" % (origin, len(data), stale_note)
 
 
 def find_archive():
@@ -233,9 +247,29 @@ if RUN_AFTER_INSTALL:
     elif not tun.is_file():
         print("  WARN maple_tunnel.py is not installed: cannot start the proxy")
     else:
-        _key = os.environ.get("MAPLE_API_KEY") or getpass.getpass("  API key for this session (typed hidden; generate it on Windows; leave empty to skip the proxy): ").strip()
+        def _clean_key(s):
+            return "".join(ch for ch in (s or "") if "!" <= ch <= "~")      # drops spaces, line breaks, control and non-ASCII characters
+
+        def _ask_key():
+            raw = os.environ.get("MAPLE_API_KEY")
+            for attempt in range(3):
+                if raw is None:
+                    raw = getpass.getpass("  API key for this session (typed hidden; leave empty to skip the proxy): ")
+                if not raw.strip():
+                    return ""
+                k = _clean_key(raw)
+                if k != raw.strip():
+                    print("  note: removed %d unexpected character(s) (spaces/line breaks/non-ASCII) from the pasted key" % (len(raw.strip()) - len(k)))
+                if 24 <= len(k) <= 256:
+                    return k
+                print("  the key has %d usable characters; it must have 24-256 (the PowerShell command in guide N makes 64). Try again (%d/3)." % (len(k), attempt + 1))
+                raw = None
+            return ""
+
+        _key = _ask_key()
         if not _key:
-            print("  skipped: no key given. From Windows run scripts\\new_session.ps1 to supply it over SSH, or re-run this cell.")
+            print("  skipped: no usable key. Alternative that avoids pasting (run on Windows, same window that holds $env:MAPLE_API_KEY):")
+            print("    $env:MAPLE_API_KEY | ssh -o UpdateHostKeys=no kaggle2 \"tr -d '\\r' | python3 -B /kaggle/working/MAPLE_compatible/maple_tunnel.py start --key-stdin --maple-home /kaggle/working/MAPLE-llama.cpp --state-dir /kaggle/working/MAPLE_compatible/state\"")
         else:
             r = subprocess.run(["python3", "-B", str(tun), "start", "--maple-home", PROJECT_DIR, "--state-dir", str(Path(INSTALL_DIR, "state")), "--key-stdin", "--wait", "60"],
                                input=_key + "\n", capture_output=True, text=True, timeout=180, cwd=INSTALL_DIR)
